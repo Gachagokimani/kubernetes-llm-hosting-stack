@@ -1,0 +1,26 @@
+[
+  {
+    "topic": "Identity & Education",
+    "content": "Brighton Kimani is an AI, Automation, DevOps, and SRE specialist based in Nairobi (+254115482990, gachagokimani@gmail.com) holding a BSc in Information Technology from Kirinyaga University (Sep 2021 - Oct 2025), where he built a blockchain-powered mobile digitized insurance claims thesis."
+  },
+  {
+    "topic": "Glimpse Travel & Tours",
+    "content": "At Glimpse Travel & Tours (Nov 2026 - Present), Brighton serves as a Part-Time Software Automation Engineer architecting multi-tenant workflows, custom vendor branding interfaces, and automated integration pipelines for a unified travel product catalogue."
+  },
+  {
+    "topic": "Safaricom PLC",
+    "content": "At Safaricom PLC (Oct 2025 - Oct 2026), Brighton worked as an AI & Automations Engineer building full-stack microservices automating ITSM, onboarding, and waste management with UiPath, n8n, Playwright, and PyTorch chat interfaces—reducing execution times from days to minutes—alongside OpenShift, AWS, Jenkins CI/CD, GitOps (FluxCD, GitLab), pipeline security hardening, and Technovation STEM mentorship."
+  },
+  {
+    "topic": "Bill Motors",
+    "content": "At Bill Motors (Jan 2024 - Oct 2025), Brighton worked as an Automation Engineer building self-service cloud infrastructure with Terraform, automated self-healing incident remediation systems, CI/CD pipelines, and embedded DevSecOps security gates."
+  },
+  {
+    "topic": "Digital Marketing & SEO",
+    "content": "Brighton led multi-platform AIOps social media and SEO content strategies at Howam Productions (Jun 2024 - Sep 2025) and Journey Palette (May 2024 - Aug 2025) across LinkedIn, Instagram, TikTok, Facebook, and Blogs."
+  },
+  {
+    "topic": "Kubernetes LLM Hosting Stack",
+    "content": "Brighton architected the open-source Kubernetes LLM Hosting Stack (github.com/Gachagokimani/kubernetes-llm-hosting-stack) running quantized GGUF inference via llama.cpp, SearXNG meta-search, and a FastAPI hybrid RAG portfolio concierge on resource-constrained nodes."
+  }
+]
