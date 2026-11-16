@@ -1,0 +1,12 @@
+namespace: ai-stack
+llm:
+  image: ghcr.io/ggml-org/llama.cpp:server
+  hfModel: "Qwen/Qwen2.5-0.5B-Instruct-GGUF:Q4_K_M"
+  gpuLayers: 0
+  gpuCount: 0
+  memoryLimit: "1200Mi"
+frontend:
+  nodePort: 30882
+  memoryLimit: "384Mi"
+storage:
+  size: "2Gi"

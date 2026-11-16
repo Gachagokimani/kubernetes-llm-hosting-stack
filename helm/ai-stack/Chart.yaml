@@ -1,0 +1,6 @@
+apiVersion: v2
+name: brighton-ai-stack
+description: Self-hosted LLM, Hybrid RAG, and Polyglot Microservices Portfolio Stack
+type: application
+version: 0.1.0
+appVersion: "1.0.0"

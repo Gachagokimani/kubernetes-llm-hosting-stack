@@ -3,11 +3,14 @@ from collections import Counter
 from pathlib import Path
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 app = FastAPI(title="Brighton Kimani Portfolio RAG API")
 
 APP_DIR = Path(__file__).resolve().parent
+if (APP_DIR / "static").exists():
+    app.mount("/static", StaticFiles(directory=str(APP_DIR / "static")), name="static")
 LLAMA_URL = os.getenv("LLAMA_URL", "http://llama-server:8080/v1/chat/completions")
 SEARXNG_URL = os.getenv("SEARXNG_URL", "")
 
