@@ -13,7 +13,13 @@
   <div class="bg-orb orb-crimson"></div>
 
   <nav>
-    <div class="logo">BRIGHTON KIMANI</div>
+    <div class="logo">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#74c69d" stroke-width="2">
+        <polygon points="12 2 21 7 21 17 12 22 3 17 3 7 12 2"></polygon>
+        <circle cx="12" cy="12" r="3" stroke="#06b6d4"></circle>
+      </svg>
+      BRIGHTON KIMANI
+    </div>
     <div class="nav-links">
       <a href="#projects"><i data-lucide="folder-git-2"></i> Projects</a>
       <a href="#competencies"><i data-lucide="cpu"></i> Competencies</a>
@@ -25,7 +31,16 @@
   <div class="container">
     <header class="hero">
       <div>
-        <div class="status-pill"><span class="pulse-dot"></span> Live on Kubernetes &bull; Nairobi, Kenya</div>
+        <div class="identity-row">
+          <div class="portrait-ring">
+            <img src="/static/profile.jpg" alt="Brighton Kimani at Safaricom Decode" onerror="this.style.display='none'" />
+          </div>
+          <div>
+            <div class="status-pill"><span class="pulse-dot"></span> Live on Kubernetes &bull; Nairobi, Kenya</div>
+            <div style="font-size:0.84rem;color:var(--text-secondary);margin-top:0.35rem;">Brighton Kimani &mdash; Systems &amp; AI Infrastructure Engineer</div>
+          </div>
+        </div>
+
         <h1>AI, Automation, <span class="gradient-text">DevOps &amp; SRE</span> Specialist</h1>
         <p>
           Architecting resilient, self-healing cloud infrastructure, low-footprint LLM serving pipelines, and polyglot microservices that turn manual bottlenecks into high-velocity systems.
@@ -69,8 +84,16 @@
       <p class="section-sub">A glimpse into open-source AI infrastructure, automation platforms, and scalable full-stack systems.</p>
 
       <div class="projects-grid">
+        <!-- 1. kubernetes-llm-hosting-stack -->
         <article class="project-card featured">
           <div>
+            <div class="project-svg-wrap">
+              <svg width="30" height="30" viewBox="0 0 48 48" fill="none">
+                <circle class="svg-spin-slow" cx="24" cy="24" r="18" stroke="#74c69d" stroke-width="2" stroke-dasharray="5 4" />
+                <polygon points="24,11 35,17.5 35,30.5 24,37 13,30.5 13,17.5" stroke="#06b6d4" stroke-width="2" fill="rgba(6,182,212,0.12)" />
+                <circle class="svg-pulse-node" cx="24" cy="24" r="4" fill="#e11d48" />
+              </svg>
+            </div>
             <div class="project-meta">
               <span class="lang-badge"><i data-lucide="server"></i> Kubernetes &bull; HTML / Python</span>
               <span class="featured-tag"><span class="material-symbols-outlined">verified</span> Flagship</span>
@@ -81,8 +104,15 @@
           <a href="https://github.com/Gachagokimani/kubernetes-llm-hosting-stack" target="_blank" rel="noopener" class="project-link">Inspect Architecture &amp; Source <i data-lucide="arrow-up-right"></i></a>
         </article>
 
+        <!-- 2. rhomes -->
         <article class="project-card">
           <div>
+            <div class="project-svg-wrap">
+              <svg width="30" height="30" viewBox="0 0 48 48" fill="none">
+                <path d="M10 23L24 11L38 23V37H28V28H20V37H10V23Z" stroke="#74c69d" stroke-width="2.2" fill="rgba(116,198,157,0.12)" />
+                <circle class="svg-pulse-node" cx="35" cy="14" r="3.5" fill="#06b6d4" />
+              </svg>
+            </div>
             <div class="project-meta">
               <span class="lang-badge"><i data-lucide="code-2"></i> TypeScript</span>
               <span style="color:var(--text-secondary);">Public</span>
@@ -93,8 +123,17 @@
           <a href="https://github.com/Gachagokimani/rhomes" target="_blank" rel="noopener" class="project-link">Inspect Repository <i data-lucide="arrow-up-right"></i></a>
         </article>
 
+        <!-- 3. Cybersmarter-business-system -->
         <article class="project-card">
           <div>
+            <div class="project-svg-wrap">
+              <svg width="30" height="30" viewBox="0 0 48 48" fill="none">
+                <rect x="10" y="12" width="12" height="10" rx="2" stroke="#06b6d4" stroke-width="2" />
+                <rect x="26" y="12" width="12" height="10" rx="2" stroke="#74c69d" stroke-width="2" />
+                <rect x="18" y="28" width="12" height="10" rx="2" stroke="#e11d48" stroke-width="2" />
+                <path d="M16 22V25H32V22M24 25V28" stroke="#74c69d" stroke-width="2" />
+              </svg>
+            </div>
             <div class="project-meta">
               <span class="lang-badge"><i data-lucide="code-2"></i> TypeScript</span>
               <span style="color:var(--text-secondary);">Public</span>
@@ -105,8 +144,19 @@
           <a href="https://github.com/Gachagokimani/Cybersmarter-business-system" target="_blank" rel="noopener" class="project-link">Inspect Repository <i data-lucide="arrow-up-right"></i></a>
         </article>
 
+        <!-- 4. firstlight-apartment -->
         <article class="project-card">
           <div>
+            <div class="project-svg-wrap">
+              <svg width="30" height="30" viewBox="0 0 48 48" fill="none">
+                <rect x="14" y="10" width="20" height="28" rx="2" stroke="#74c69d" stroke-width="2.2" fill="rgba(116,198,157,0.1)" />
+                <line x1="19" y1="17" x2="23" y2="17" stroke="#06b6d4" stroke-width="2" />
+                <line x1="25" y1="17" x2="29" y2="17" stroke="#06b6d4" stroke-width="2" />
+                <line x1="19" y1="23" x2="23" y2="23" stroke="#06b6d4" stroke-width="2" />
+                <line x1="25" y1="23" x2="29" y2="23" stroke="#06b6d4" stroke-width="2" />
+                <rect x="21" y="30" width="6" height="8" stroke="#e11d48" stroke-width="1.8" />
+              </svg>
+            </div>
             <div class="project-meta">
               <span class="lang-badge"><i data-lucide="code-2"></i> JavaScript</span>
               <span style="color:var(--text-secondary);">Public</span>

@@ -1,4 +1,5 @@
 :root {
+  /* Single Source of Truth: Jungle Green Base + Crimson & Turquoise Brand Tokens */
   --bg-jungle-deep: #091913;
   --bg-jungle-surface: #10281f;
   --bg-jungle-elevated: #17382b;
@@ -16,7 +17,7 @@
   --radius-md: 12px;
   --radius-lg: 16px;
   --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
-  --transition-base: 0.25s var(--ease-out-expo);
+  --transition-base: 0.28s var(--ease-out-expo);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -26,16 +27,18 @@ body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   background-color: var(--bg-jungle-deep);
   background-image:
-    radial-gradient(circle at 12% 15%, rgba(45, 106, 79, 0.32), transparent 44%),
+    radial-gradient(circle at 12% 15%, rgba(45, 106, 79, 0.34), transparent 44%),
     radial-gradient(circle at 88% 82%, rgba(6, 182, 212, 0.14), transparent 42%);
   color: var(--text-primary);
   line-height: 1.6;
   overflow-x: hidden;
 }
 
+/* Strict Iconography Classes (Lucide & Material Symbols Only) */
 .lucide { width: 16px; height: 16px; stroke-width: 2; vertical-align: middle; flex-shrink: 0; }
 .material-symbols-outlined { font-size: 18px; vertical-align: middle; line-height: 1; }
 
+/* Ambient Orbs */
 .bg-orb {
   position: fixed;
   border-radius: 50%;
@@ -52,12 +55,13 @@ body {
   100% { transform: translate(40px, 30px) scale(1.1); }
 }
 
+/* Sticky Navbar */
 nav {
   position: sticky;
   top: 0;
   z-index: 50;
   backdrop-filter: blur(14px);
-  background: rgba(9, 25, 19, 0.86);
+  background: rgba(9, 25, 19, 0.88);
   border-bottom: 1px solid var(--jungle-border);
   padding: 1rem 2rem;
   display: flex;
@@ -65,8 +69,11 @@ nav {
   align-items: center;
 }
 .logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
   font-weight: 800;
-  font-size: 1.2rem;
+  font-size: 1.18rem;
   letter-spacing: 0.6px;
   background: linear-gradient(90deg, var(--jungle-mint), var(--turquoise), var(--crimson));
   -webkit-background-clip: text;
@@ -81,13 +88,13 @@ nav {
   text-decoration: none;
   font-size: 0.9rem;
   font-weight: 500;
-  transition: color var(--transition-base);
+  transition: color var(--transition-base), transform var(--transition-base);
 }
-.nav-links a:hover { color: var(--jungle-mint); }
+.nav-links a:hover { color: var(--jungle-mint); transform: translateY(-1px); }
 
-.container { max-width: 1140px; margin: 0 auto; padding: 0 1.5rem; }
+.container { max-width: 1160px; margin: 0 auto; padding: 0 1.5rem; }
 
-/* Buttons & Hover Choreography */
+/* Human-Centric Buttons & Hover Choreography */
 .btn-primary, .btn-secondary {
   display: inline-flex;
   align-items: center;
@@ -114,14 +121,47 @@ nav {
 }
 .btn-secondary:hover { background: rgba(64, 145, 108, 0.28); transform: translateY(-2px); }
 
-/* Hero */
+/* Hero Layout with Portrait + AI Concierge */
 .hero {
   display: grid;
   grid-template-columns: 1.15fr 0.85fr;
   gap: 2.5rem;
   align-items: center;
-  padding: 4.25rem 0 3.25rem;
+  padding: 4rem 0 3.25rem;
 }
+
+.identity-row {
+  display: flex;
+  align-items: center;
+  gap: 1.15rem;
+  margin-bottom: 1.25rem;
+}
+
+.portrait-ring {
+  position: relative;
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  padding: 3px;
+  background: linear-gradient(135deg, var(--jungle-mint), var(--turquoise), var(--crimson));
+  box-shadow: 0 0 24px rgba(116, 198, 157, 0.35);
+  flex-shrink: 0;
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+.portrait-ring:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 32px rgba(6, 182, 212, 0.5);
+}
+.portrait-ring img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 22%;
+  border-radius: 50%;
+  display: block;
+  border: 2px solid var(--bg-jungle-deep);
+}
+
 .status-pill {
   display: inline-flex;
   align-items: center;
@@ -133,7 +173,6 @@ nav {
   background: rgba(116, 198, 157, 0.14);
   border: 1px solid rgba(116, 198, 157, 0.42);
   color: var(--jungle-mint);
-  margin-bottom: 1.2rem;
 }
 .pulse-dot {
   width: 8px; height: 8px; border-radius: 50%;
@@ -146,18 +185,18 @@ nav {
   50% { transform: scale(1.45); opacity: 0.55; }
 }
 
-h1 { font-size: clamp(2.3rem, 4.5vw, 3.55rem); font-weight: 800; line-height: 1.12; margin-bottom: 1rem; }
+h1 { font-size: clamp(2.2rem, 4.3vw, 3.45rem); font-weight: 800; line-height: 1.12; margin-bottom: 1rem; }
 .gradient-text {
   background: linear-gradient(120deg, var(--jungle-mint) 10%, var(--turquoise) 52%, var(--crimson) 92%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
-.hero p { color: var(--text-secondary); font-size: 1.04rem; margin-bottom: 1.75rem; }
+.hero p { color: var(--text-secondary); font-size: 1.03rem; margin-bottom: 1.75rem; }
 .cta-row { display: flex; flex-wrap: wrap; gap: 0.9rem; margin-bottom: 1.5rem; }
 .contact-strip { font-size: 0.85rem; color: var(--text-secondary); display: flex; flex-wrap: wrap; gap: 1.1rem; }
 .contact-item { display: inline-flex; align-items: center; gap: 0.38rem; }
 
-/* AI Concierge */
+/* AI Concierge Panel */
 .ai-panel {
   background: var(--bg-jungle-surface);
   border: 1px solid var(--jungle-border);
@@ -186,14 +225,14 @@ h1 { font-size: clamp(2.3rem, 4.5vw, 3.55rem); font-weight: 800; line-height: 1.
   margin-bottom: 0.75rem;
 }
 .ai-header-title { display: inline-flex; align-items: center; gap: 0.45rem; font-weight: 700; font-size: 0.92rem; color: var(--turquoise); }
-.ai-badge { font-size: 0.72rem; padding: 0.2rem 0.55rem; border-radius: 6px; background: rgba(225, 29, 72, 0.2); color: #fda4af; }
+.ai-badge { font-size: 0.72rem; padding: 0.2rem 0.55rem; border-radius: 6px; background: rgba(225, 29, 72, 0.2); color: #fda4af; font-weight: 600; }
 
 #chat {
   height: 235px;
   overflow-y: auto;
   padding: 0.65rem;
-  background: rgba(9, 25, 19, 0.75);
-  border: 1px solid rgba(82, 183, 136, 0.14);
+  background: rgba(9, 25, 19, 0.78);
+  border: 1px solid rgba(82, 183, 136, 0.16);
   border-radius: 10px;
   margin-bottom: 0.75rem;
   font-size: 0.88rem;
@@ -244,7 +283,7 @@ h1 { font-size: clamp(2.3rem, 4.5vw, 3.55rem); font-weight: 800; line-height: 1.
 .chat-input-row button:hover { transform: translateY(-1px); }
 .chat-input-row button:disabled { opacity: 0.5; }
 
-/* Sections & Grids */
+/* Sections & Cards */
 section { padding: 3.5rem 0; }
 .section-title {
   font-size: 1.75rem;
@@ -264,7 +303,7 @@ section { padding: 3.5rem 0; }
 
 .projects-grid, .skills-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(255px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 1.25rem;
 }
 .projects-grid { margin-bottom: 1.75rem; }
@@ -280,7 +319,7 @@ section { padding: 3.5rem 0; }
 .project-card:hover, .card:hover {
   transform: translateY(-4px);
   border-color: var(--jungle-mint);
-  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.42);
 }
 .project-card.featured {
   border-color: rgba(6, 182, 212, 0.48);
@@ -288,7 +327,29 @@ section { padding: 3.5rem 0; }
 }
 .card.crimson-accent:hover { border-color: var(--crimson); }
 
-.project-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; font-size: 0.75rem; }
+/* Custom SVG Project Emblem Styling & CSS Animations */
+.project-svg-wrap {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: rgba(9, 25, 19, 0.85);
+  border: 1px solid var(--jungle-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.85rem;
+  transition: border-color var(--transition-base), transform var(--transition-base);
+}
+.project-card:hover .project-svg-wrap {
+  border-color: var(--turquoise);
+  transform: scale(1.06);
+}
+.svg-spin-slow { transform-origin: 24px 24px; animation: spinSlow 18s linear infinite; }
+.svg-pulse-node { animation: svgPulse 2.4s ease-in-out infinite; }
+@keyframes spinSlow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+@keyframes svgPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+.project-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.65rem; font-size: 0.75rem; }
 .lang-badge {
   display: inline-flex;
   align-items: center;
