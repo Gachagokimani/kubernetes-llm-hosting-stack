@@ -55,10 +55,16 @@
         </div>
       </div>
 
-      <div class="ai-panel">
+      <div id="aiBackdrop" class="ai-backdrop" onclick="closeBlowout()"></div>
+      <div id="aiPanel" class="ai-panel">
         <div class="ai-header">
           <span class="ai-header-title"><span class="material-symbols-outlined">smart_toy</span> Ask Brighton's Live AI Concierge</span>
-          <span class="ai-badge">llama.cpp + RAG</span>
+          <div style="display:flex;align-items:center;gap:0.45rem;">
+            <span class="ai-badge">llama.cpp + RAG</span>
+            <button type="button" id="expandBtn" class="expand-btn" onclick="toggleBlowout()" title="Expand chat (Esc to close)">
+              <i data-lucide="maximize-2"></i> <span id="expandLabel">Expand</span>
+            </button>
+          </div>
         </div>
         <div id="chat">
           <div class="msg bot-msg">Hello. I am running live inside Brighton's Kubernetes cluster. Upload a PDF below or ask about his Safaricom AIOps engineering, Terraform infrastructure, or open-source repositories.</div>
@@ -289,15 +295,61 @@
     }, { threshold: 0.12 });
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
+    let isConciergeBusy = false;
+
+    function toggleBlowout() {
+      const panel = document.getElementById('aiPanel');
+      const backdrop = document.getElementById('aiBackdrop');
+      const label = document.getElementById('expandLabel');
+      const isExpanded = panel.classList.toggle('expanded');
+      backdrop.classList.toggle('active', isExpanded);
+      document.body.style.overflow = isExpanded ? 'hidden' : '';
+      label.textContent = isExpanded ? 'Close (Esc)' : 'Expand';
+    }
+
+    function closeBlowout() {
+      const panel = document.getElementById('aiPanel');
+      const backdrop = document.getElementById('aiBackdrop');
+      const label = document.getElementById('expandLabel');
+      if (panel.classList.contains('expanded')) {
+        panel.classList.remove('expanded');
+        backdrop.classList.remove('active');
+        document.body.style.overflow = '';
+        label.textContent = 'Expand';
+      }
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeBlowout();
+    });
+
+    function setBusyState(busy) {
+      isConciergeBusy = busy;
+      const qInput = document.getElementById('q');
+      const btn = document.getElementById('btn');
+      const uploadBtn = document.querySelector('.pdf-upload-btn');
+      qInput.disabled = busy;
+      btn.disabled = busy;
+      if (uploadBtn) uploadBtn.disabled = busy;
+      btn.innerHTML = busy
+        ? 'Thinking... <i data-lucide="loader-2"></i>'
+        : 'Ask <i data-lucide="send"></i>';
+      document.querySelectorAll('.chip').forEach(c => c.classList.toggle('disabled', busy));
+      lucide.createIcons();
+    }
+
     function askPreset(text) {
+      if (isConciergeBusy) return;
       document.getElementById('q').value = text;
       send();
     }
 
     async function uploadPdf() {
+      if (isConciergeBusy) return;
       const fileInput = document.getElementById('pdfFile');
       const chat = document.getElementById('chat');
       if (!fileInput.files.length) return;
+      setBusyState(true);
       const fd = new FormData();
       fd.append('file', fileInput.files[0]);
       chat.innerHTML += `<div class="msg"><span class="user-msg">System:</span> Uploading and indexing ${fileInput.files[0].name}...</div>`;
@@ -309,21 +361,26 @@
         chat.innerHTML += `<div class="msg"><span class="bot-msg"><b>PVC Pipeline:</b> Stored offer/proposal <code>${data.upload.filename}</code> via .NET 8 and indexed separately via Java (Total offers/proposals: ${data.index.totalProposals ?? data.index.totalKnowledgeEntries}).</span></div>`;
       } catch (e) {
         chat.innerHTML += `<div class="msg" style="color:#fb7185;">Upload error: ${e.message}</div>`;
+      } finally {
+        fileInput.value = '';
+        setBusyState(false);
+        chat.scrollTop = chat.scrollHeight;
       }
-      fileInput.value = '';
-      chat.scrollTop = chat.scrollHeight;
     }
 
     async function send() {
+      if (isConciergeBusy) return;
       const qInput = document.getElementById('q');
-      const btn = document.getElementById('btn');
       const chat = document.getElementById('chat');
       const query = qInput.value.trim();
       if (!query) return;
 
+      setBusyState(true);
       chat.innerHTML += `<div class="msg"><span class="user-msg">You:</span> ${query}</div>`;
       qInput.value = '';
-      btn.disabled = true;
+
+      const thinkingId = 'thinking-' + Date.now();
+      chat.innerHTML += `<div id="${thinkingId}" class="msg thinking-bubble"><span class="thinking-dots"><span></span><span></span><span></span></span> Concierge is thinking...</div>`;
       chat.scrollTop = chat.scrollHeight;
 
       try {
@@ -333,14 +390,20 @@
           body: JSON.stringify({ query, use_web: document.getElementById('web').checked })
         });
         const data = await res.json();
+        const thinkingEl = document.getElementById(thinkingId);
+        if (thinkingEl) thinkingEl.remove();
         const srcs = [...(data.local_sources || []), ...(data.web_sources || [])];
         const srcHtml = srcs.length ? `<div class="src-box">Grounded in ${srcs.length} retrieved source(s)</div>` : '';
         chat.innerHTML += `<div class="msg"><span class="bot-msg"><b>AI Concierge:</b> ${data.answer}</span>${srcHtml}</div>`;
       } catch (e) {
+        const thinkingEl = document.getElementById(thinkingId);
+        if (thinkingEl) thinkingEl.remove();
         chat.innerHTML += `<div class="msg" style="color:#fb7185;">Connection error: ${e}</div>`;
+      } finally {
+        setBusyState(false);
+        qInput.focus();
+        chat.scrollTop = chat.scrollHeight;
       }
-      btn.disabled = false;
-      chat.scrollTop = chat.scrollHeight;
     }
   </script>
 </body>
