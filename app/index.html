@@ -295,6 +295,46 @@
     }, { threshold: 0.12 });
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
+    async function getSessionFingerprint() {
+      const cached = localStorage.getItem('bk_concierge_fp');
+      if (cached) return cached;
+      const raw = [
+        navigator.userAgent,
+        navigator.language,
+        screen.width + 'x' + screen.height,
+        Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC',
+        navigator.platform || 'web'
+      ].join('|');
+      const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(raw));
+      const hex = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('').slice(0, 24);
+      const fp = 'fp-' + hex;
+      localStorage.setItem('bk_concierge_fp', fp);
+      return fp;
+    }
+
+    async function loadPreviousChat() {
+      const chat = document.getElementById('chat');
+      try {
+        const sid = await getSessionFingerprint();
+        const res = await fetch(`/api/chat/history?session_id=${encodeURIComponent(sid)}`);
+        const data = await res.json();
+        if (data.messages && data.messages.length > 0) {
+          chat.innerHTML += `<div class="msg" style="font-size:0.74rem;color:var(--jungle-mint);">Restored ${data.messages.length} previous message(s) for session <code>${sid}</code></div>`;
+          for (const m of data.messages) {
+            if (m.role === 'user') {
+              chat.innerHTML += `<div class="msg"><span class="user-msg">You:</span> ${m.text}</div>`;
+            } else {
+              const srcHtml = m.sourcesCount ? `<div class="src-box">Grounded in ${m.sourcesCount} retrieved source(s)</div>` : '';
+              chat.innerHTML += `<div class="msg"><span class="bot-msg"><b>AI Concierge:</b> ${m.text}</span>${srcHtml}</div>`;
+            }
+          }
+          chat.scrollTop = chat.scrollHeight;
+        }
+      } catch (e) {}
+    }
+
+    window.addEventListener('DOMContentLoaded', loadPreviousChat);
+
     let isConciergeBusy = false;
 
     function toggleBlowout() {
@@ -387,7 +427,7 @@
         const res = await fetch('/api/chat', {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({ query, use_web: document.getElementById('web').checked })
+          body: JSON.stringify({ query, use_web: document.getElementById('web').checked, session_id: await getSessionFingerprint() })
         });
         const data = await res.json();
         const thinkingEl = document.getElementById(thinkingId);
