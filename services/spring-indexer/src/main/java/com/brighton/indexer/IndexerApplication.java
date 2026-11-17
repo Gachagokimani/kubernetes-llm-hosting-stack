@@ -27,8 +27,7 @@ public class IndexerApplication {
                 ex.sendResponseHeaders(405, -1);
                 return;
             }
-            String resultJson = syncPdfs();
-            byte[] resp = resultJson.getBytes(StandardCharsets.UTF_8);
+            byte[] resp = syncPdfs().getBytes(StandardCharsets.UTF_8);
             ex.getResponseHeaders().add("Content-Type", "application/json");
             ex.sendResponseHeaders(200, resp.length);
             try (OutputStream os = ex.getResponseBody()) { os.write(resp); }
