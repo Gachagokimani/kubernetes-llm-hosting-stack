@@ -1,0 +1,119 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pdf-ingest-dotnet
+  namespace: ai-stack
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pdf-ingest-dotnet
+  template:
+    metadata:
+      labels:
+        app: pdf-ingest-dotnet
+    spec:
+      initContainers:
+      - name: fetch-dotnet-src
+        image: alpine/git:2.47.2
+        command: ["/bin/sh", "-c", "git clone --depth 1 https://github.com/Gachagokimani/kubernetes-llm-hosting-stack.git /tmp/repo && cp -r /tmp/repo/services/dotnet-upload/* /src/"]
+        volumeMounts:
+        - name: src
+          mountPath: /src
+      containers:
+      - name: pdf-ingest-dotnet
+        image: mcr.microsoft.com/dotnet/sdk:8.0
+        workingDir: /src
+        command: ["dotnet", "run", "--urls", "http://0.0.0.0:5000"]
+        envFrom:
+        - configMapRef:
+            name: shared-app-config
+        ports:
+        - containerPort: 5000
+        volumeMounts:
+        - name: src
+          mountPath: /src
+        - name: shared-storage
+          mountPath: /shared
+        resources:
+          requests: { memory: "256Mi", cpu: "100m" }
+          limits: { memory: "640Mi" }
+      volumes:
+      - name: src
+        emptyDir: {}
+      - name: shared-storage
+        persistentVolumeClaim:
+          claimName: rag-shared-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pdf-ingest-dotnet
+  namespace: ai-stack
+spec:
+  type: ClusterIP
+  selector:
+    app: pdf-ingest-dotnet
+  ports:
+  - port: 5000
+    targetPort: 5000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: doc-indexer-spring
+  namespace: ai-stack
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: doc-indexer-spring
+  template:
+    metadata:
+      labels:
+        app: doc-indexer-spring
+    spec:
+      initContainers:
+      - name: fetch-spring-src
+        image: alpine/git:2.47.2
+        command: ["/bin/sh", "-c", "git clone --depth 1 https://github.com/Gachagokimani/kubernetes-llm-hosting-stack.git /tmp/repo && cp -r /tmp/repo/services/spring-indexer/* /src/"]
+        volumeMounts:
+        - name: src
+          mountPath: /src
+      containers:
+      - name: doc-indexer-spring
+        image: maven:3.9.9-eclipse-temurin-17
+        workingDir: /src
+        command: ["mvn", "spring-boot:run"]
+        envFrom:
+        - configMapRef:
+            name: shared-app-config
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - name: src
+          mountPath: /src
+        - name: shared-storage
+          mountPath: /shared
+        resources:
+          requests: { memory: "384Mi", cpu: "100m" }
+          limits: { memory: "896Mi" }
+      volumes:
+      - name: src
+        emptyDir: {}
+      - name: shared-storage
+        persistentVolumeClaim:
+          claimName: rag-shared-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: doc-indexer-spring
+  namespace: ai-stack
+spec:
+  type: ClusterIP
+  selector:
+    app: doc-indexer-spring
+  ports:
+  - port: 8080
+    targetPort: 8080

@@ -133,7 +133,12 @@
         <div id="chat">
           <div class="msg bot-msg">Hello. I am running live inside Brighton's Kubernetes cluster. Select a prompt below or ask about his Safaricom AIOps engineering, Terraform infrastructure, or open-source repositories.</div>
         </div>
-        <div class="chips">
+        <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;padding:0.5rem 0.65rem;border-radius:8px;background:rgba(9,25,19,0.72);border:1px dashed var(--jungle-highlight);">
+  <i data-lucide="file-up" style="color:var(--jungle-mint);"></i>
+  <input id="pdfFile" type="file" accept="application/pdf" style="font-size:0.76rem;color:var(--text-secondary);flex:1;" />
+  <button type="button" onclick="uploadPdf()" style="padding:0.35rem 0.7rem;border-radius:6px;border:none;font-size:0.76rem;font-weight:600;color:#fff;background:var(--crimson);cursor:pointer;">Upload &amp; Index</button>
+</div>
+<div class="chips">
           <span class="chip" onclick="askPreset('What did Brighton build at Safaricom PLC?')">Safaricom AIOps</span>
           <span class="chip" onclick="askPreset('Summarize Brighton DevOps and Terraform skills')">DevOps &amp; Terraform</span>
           <span class="chip" onclick="askPreset('How does this Kubernetes LLM stack work?')">K8s LLM Stack</span>
@@ -394,7 +399,26 @@
       send();
     }
 
-    async function send() {
+    async function uploadPdf() {
+  const fileInput = document.getElementById("pdfFile");
+  const chat = document.getElementById("chat");
+  if (!fileInput.files.length) return;
+  const fd = new FormData();
+  fd.append("file", fileInput.files[0]);
+  chat.innerHTML += `<div class="msg"><span class="user-msg">System:</span> Uploading and indexing ${fileInput.files[0].name}...</div>`;
+  chat.scrollTop = chat.scrollHeight;
+  try {
+    const res = await fetch("/api/upload-pdf", { method: "POST", body: fd });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.detail || "Upload failed");
+    chat.innerHTML += `<div class="msg"><span class="bot-msg"><b>PVC Pipeline:</b> Stored <code>${data.upload.filename}</code> via .NET 8 and indexed via Spring Boot (Total KB entries: ${data.index.totalKnowledgeEntries}).</span></div>`;
+  } catch (e) {
+    chat.innerHTML += `<div class="msg" style="color:#fb7185;">Upload error: ${e.message}</div>`;
+  }
+  fileInput.value = "";
+  chat.scrollTop = chat.scrollHeight;
+}
+async function send() {
       const qInput = document.getElementById('q');
       const btn = document.getElementById('btn');
       const chat = document.getElementById('chat');

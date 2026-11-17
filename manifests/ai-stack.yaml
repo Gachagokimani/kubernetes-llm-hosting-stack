@@ -144,15 +144,23 @@ spec:
             port: 8000
           initialDelaySeconds: 10
           periodSeconds: 5
+        envFrom:
+        - configMapRef:
+            name: shared-app-config
         volumeMounts:
         - name: app-workspace
           mountPath: /app
+        - name: shared-storage
+          mountPath: /shared
         resources:
           requests: { memory: "128Mi", cpu: "50m" }
           limits: { memory: "384Mi" }
       volumes:
       - name: app-workspace
         emptyDir: {}
+      - name: shared-storage
+        persistentVolumeClaim:
+          claimName: rag-shared-pvc
 ---
 apiVersion: v1
 kind: Service
