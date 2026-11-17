@@ -288,12 +288,17 @@
   </footer>
 
   <script>
-    lucide.createIcons();
-
     const observer = new IntersectionObserver((entries) => {
-      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('visible');
+      });
     }, { threshold: 0.12 });
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    const ICON_MAX = '<polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/>';
+    const ICON_MIN = '<polyline points="4 14 10 14 10 20"/><polyline points="20 10 14 10 14 4"/><line x1="14" y1="10" x2="21" y2="3"/><line x1="3" y1="21" x2="10" y2="14"/>';
+    const ICON_SEND = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>';
+    const ICON_SPIN = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>';
 
     async function getSessionFingerprint() {
       const cached = localStorage.getItem('bk_concierge_fp');
@@ -341,21 +346,39 @@
       const panel = document.getElementById('aiPanel');
       const backdrop = document.getElementById('aiBackdrop');
       const label = document.getElementById('expandLabel');
-      const isExpanded = panel.classList.toggle('expanded');
-      backdrop.classList.toggle('active', isExpanded);
-      document.body.style.overflow = isExpanded ? 'hidden' : '';
-      label.textContent = isExpanded ? 'Close (Esc)' : 'Expand';
+      const icon = document.getElementById('expandIcon');
+      const bar = document.getElementById('blowoutBar');
+      const willExpand = !panel.classList.contains('expanded');
+
+      if (willExpand) {
+        document.body.appendChild(backdrop);
+        document.body.appendChild(panel);
+        panel.classList.add('expanded');
+        backdrop.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        label.textContent = 'Close (Esc)';
+        if (icon) icon.innerHTML = ICON_MIN;
+        if (bar) bar.style.display = 'none';
+      } else {
+        closeBlowout();
+      }
     }
 
     function closeBlowout() {
       const panel = document.getElementById('aiPanel');
       const backdrop = document.getElementById('aiBackdrop');
       const label = document.getElementById('expandLabel');
-      if (panel.classList.contains('expanded')) {
+      const icon = document.getElementById('expandIcon');
+      const bar = document.getElementById('blowoutBar');
+      const home = document.getElementById('aiPanelHome');
+      if (panel && panel.classList.contains('expanded')) {
         panel.classList.remove('expanded');
         backdrop.classList.remove('active');
         document.body.style.overflow = '';
         label.textContent = 'Expand';
+        if (icon) icon.innerHTML = ICON_MAX;
+        if (bar) bar.style.display = 'flex';
+        if (home && home.parentNode) home.parentNode.insertBefore(panel, home.nextSibling);
       }
     }
 
@@ -371,11 +394,8 @@
       qInput.disabled = busy;
       btn.disabled = busy;
       if (uploadBtn) uploadBtn.disabled = busy;
-      btn.innerHTML = busy
-        ? 'Thinking... <i data-lucide="loader-2"></i>'
-        : 'Ask <i data-lucide="send"></i>';
+      btn.innerHTML = busy ? `Thinking... ${ICON_SPIN}` : `Ask ${ICON_SEND}`;
       document.querySelectorAll('.chip').forEach(c => c.classList.toggle('disabled', busy));
-      lucide.createIcons();
     }
 
     function askPreset(text) {
@@ -424,10 +444,11 @@
       chat.scrollTop = chat.scrollHeight;
 
       try {
+        const sid = await getSessionFingerprint();
         const res = await fetch('/api/chat', {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({ query, use_web: document.getElementById('web').checked, session_id: await getSessionFingerprint() })
+          body: JSON.stringify({ query, use_web: document.getElementById('web').checked, session_id: sid })
         });
         const data = await res.json();
         const thinkingEl = document.getElementById(thinkingId);
@@ -445,6 +466,8 @@
         chat.scrollTop = chat.scrollHeight;
       }
     }
+
+    if (window.lucide) lucide.createIcons();
   </script>
 </body>
 </html>
