@@ -1,147 +1,231 @@
-import os, math, re, urllib.request, urllib.parse, json
-from collections import Counter
+import json
+import os
+import re
+import shutil
+import urllib.parse
+import urllib.request
 from pathlib import Path
-from fastapi import FastAPI, UploadFile, File, HTTPException
-from fastapi.responses import HTMLResponse
+from fastapi import FastAPI, File, HTTPException, UploadFile
+from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-app = FastAPI(title="Brighton Kimani Portfolio RAG API")
+app = FastAPI(title="Brighton Kimani Portfolio & Hybrid RAG Concierge")
 
 APP_DIR = Path(__file__).resolve().parent
-import shutil
-
 PROPOSALS_PATH = Path("/shared/kb/proposals_offers.json")
+LLM_URL = os.getenv("LLM_URL", "http://llama-server:8080/v1/chat/completions")
+SEARXNG_URL = os.getenv("SEARXNG_URL", "http://searxng:8080/search")
+DOTNET_BASE_URL = os.getenv("DOTNET_BASE_URL", "http://pdf-ingest-dotnet:8080")
+SPRING_INDEX_URL = os.getenv("SPRING_INDEX_URL", "http://doc-indexer-spring:8080/api/index/sync")
+
 
 def ensure_baseline_kb():
-    for target in [Path("/shared/kb/knowledge_base.json"), APP_DIR / "knowledge_base.json"]:
-        try:
-            target.parent.mkdir(parents=True, exist_ok=True)
-            if not target.exists() and (APP_DIR / "knowledge_base.json").exists() and target != (APP_DIR / "knowledge_base.json"):
-                shutil.copy2(APP_DIR / "knowledge_base.json", target)
-        except Exception:
-            pass
+    src = APP_DIR / "knowledge_base.json"
+    dst = Path("/shared/kb/knowledge_base.json")
+    try:
+        dst.parent.mkdir(parents=True, exist_ok=True)
+        if src.exists() and not dst.exists():
+            shutil.copy2(src, dst)
+    except Exception:
+        pass
+
 
 ensure_baseline_kb()
 
-if (APP_DIR / "static").exists():
-    app.mount("/static", StaticFiles(directory=str(APP_DIR / "static")), name="static")
-if (APP_DIR.parent / "public").exists():
-    app.mount("/public", StaticFiles(directory=str(APP_DIR.parent / "public")), name="public")
+static_dir = APP_DIR / "static"
+if static_dir.exists():
+    app.mount("/static", StaticFiles(directory=str(static_dir)), name="static")
 
-LLAMA_URL = os.getenv("LLAMA_URL", "http://llama-server:8080/v1/chat/completions")
-SEARXNG_URL = os.getenv("SEARXNG_URL", "http://searxng:8080/search")
-DOTNET_UPLOAD_URL = os.getenv("DOTNET_UPLOAD_URL", "http://pdf-ingest-dotnet:5000/api/pdf/upload")
-SPRING_INDEX_URL = os.getenv("SPRING_INDEX_URL", "http://doc-indexer-spring:8080/api/index/sync")
-SHARED_KB_FILE = Path(os.getenv("KB_FILE", "/shared/kb/knowledge_base.json"))
+public_dir = APP_DIR.parent / "public"
+if public_dir.exists():
+    app.mount("/public", StaticFiles(directory=str(public_dir)), name="public")
 
-def load_knowledge_base():
-    entries = []
-    for path in [APP_DIR / "knowledge_base.json", SHARED_KB_FILE]:
-        if path.exists():
-            try:
-                data = json.loads(path.read_text(encoding="utf-8"))
-                entries.extend([f"[{item['topic']}] {item['content']}" for item in data])
-            except Exception:
-                pass
-    return entries
-
-def cosine_sim(a: str, b: str) -> float:
-    wa = Counter(re.findall(r"\w+", a.lower()))
-    wb = Counter(re.findall(r"\w+", b.lower()))
-    common = set(wa.keys()) & set(wb.keys())
-    num = sum(wa[w] * wb[w] for w in common)
-    den = math.sqrt(sum(v*v for v in wa.values())) * math.sqrt(sum(v*v for v in wb.values()))
-    return num / den if den else 0.0
-
-def retrieve_local(query: str, top_k: int = 3):
-    docs = load_knowledge_base()
-    scored = sorted(docs, key=lambda d: cosine_sim(query, d), reverse=True)
-    return [d for d in scored[:top_k] if cosine_sim(query, d) > 0.04]
-
-def search_web(query: str, max_results: int = 2):
-    if not SEARXNG_URL:
-        return []
-    try:
-        url = f"{SEARXNG_URL}?q={urllib.parse.quote(query)}&format=json"
-        req = urllib.request.Request(url, headers={"User-Agent": "Brighton-Portfolio-Agent/1.0"})
-        with urllib.request.urlopen(req, timeout=5) as resp:
-            data = json.loads(resp.read().decode())
-            return [f"{r.get('title', '')}: {r.get('content', '')}" for r in data.get("results", [])[:max_results]]
-    except Exception as e:
-        return [f"(Web search unavailable: {e})"]
 
 class ChatRequest(BaseModel):
     query: str
     use_web: bool = False
+    session_id: str = "anonymous"
+
+
+def load_all_kb_entries():
+    seen_topics = set()
+    entries = []
+    # Prefer shared PVC copy first, fallback to bundled APP_DIR copy, plus separate proposals_offers.json
+    sources = [
+        Path("/shared/kb/knowledge_base.json") if Path("/shared/kb/knowledge_base.json").exists() else (APP_DIR / "knowledge_base.json"),
+        PROPOSALS_PATH,
+    ]
+    for p in sources:
+        if not p.exists():
+            continue
+        try:
+            data = json.loads(p.read_text(encoding="utf-8"))
+            for item in data:
+                topic = item.get("topic", "").strip()
+                if topic and topic not in seen_topics:
+                    seen_topics.add(topic)
+                    entries.append(item)
+        except Exception:
+            continue
+    return entries
+
+
+def retrieve_local_context(query: str, top_k: int = 3):
+    entries = load_all_kb_entries()
+    if not entries:
+        return []
+    q_words = set(re.findall(r"[a-z0-9]{3,}", query.lower()))
+    scored = []
+    identity_fallback = None
+    for item in entries:
+        topic = item.get("topic", "")
+        content = item.get("content", "")
+        text = f"{topic} {content}".lower()
+        if "identity" in topic.lower():
+            identity_fallback = f"[{topic}] {content}"
+        score = sum(1 for w in q_words if w in text)
+        if score > 0:
+            scored.append((score, f"[{topic}] {content}"))
+    scored.sort(key=lambda x: x[0], reverse=True)
+    hits = [s[1] for s in scored[:top_k]]
+    # Always ground greetings/vague queries in Brighton's real Identity & Education entry
+    if not hits and identity_fallback:
+        hits = [identity_fallback]
+    return hits
+
+
+def search_web(query: str, max_results: int = 3):
+    try:
+        params = urllib.parse.urlencode({"q": query, "format": "json"})
+        req = urllib.request.Request(
+            f"{SEARXNG_URL}?{params}",
+            headers={"User-Agent": "Mozilla/5.0", "Accept": "application/json"},
+        )
+        with urllib.request.urlopen(req, timeout=8) as resp:
+            data = json.loads(resp.read().decode())
+            return [
+                f"{r.get('title', '')}: {r.get('content', '')} ({r.get('url', '')})"
+                for r in data.get("results", [])[:max_results]
+            ]
+    except Exception as e:
+        return [f"Web search unavailable: {e}"]
+
+
+@app.get("/")
+def index():
+    return FileResponse(str(APP_DIR / "index.html"))
+
 
 @app.get("/health")
 def health():
-    return {
-        "status": "ok",
-        "kb_entries": len(load_knowledge_base()),
-        "shared_kb_mounted": SHARED_KB_FILE.parent.exists(),
-    }
+    return {"status": "healthy", "service": "rag-frontend"}
 
-@app.get("/", response_class=HTMLResponse)
-def ui():
-    return (APP_DIR / "index.html").read_text(encoding="utf-8")
+
+@app.get("/api/chat/history")
+def get_chat_history(session_id: str = "anonymous"):
+    try:
+        url = f"{DOTNET_BASE_URL}/api/chat/history/{urllib.parse.quote(session_id)}"
+        with urllib.request.urlopen(url, timeout=8) as resp:
+            return json.loads(resp.read().decode())
+    except Exception as e:
+        return {"sessionId": session_id, "messages": [], "error": str(e)}
+
 
 @app.post("/api/upload-pdf")
 async def upload_pdf(file: UploadFile = File(...)):
-    raw = await file.read()
-    if not raw.startswith(b"%PDF-"):
-        raise HTTPException(status_code=400, detail="Only valid PDF files are accepted.")
-
-    boundary = "----Boundary7MA4YWxkTrZu0gW"
+    if not file.filename.lower().endswith(".pdf"):
+        raise HTTPException(status_code=400, detail="Only PDF files are supported.")
+    file_bytes = await file.read()
+    boundary = "----BrightonBoundary7MA4YWxkTrZu0gW"
     body = (
         f"--{boundary}\r\n"
-        f"Content-Disposition: form-data; name=\"file\"; filename=\"{file.filename}\"\r\n"
+        f'Content-Disposition: form-data; name="file"; filename="{file.filename}"\r\n'
         f"Content-Type: application/pdf\r\n\r\n"
-    ).encode("utf-8") + raw + f"\r\n--{boundary}--\r\n".encode("utf-8")
+    ).encode("utf-8") + file_bytes + f"\r\n--{boundary}--\r\n".encode("utf-8")
 
-    req = urllib.request.Request(
-        DOTNET_UPLOAD_URL,
-        data=body,
-        headers={"Content-Type": f"multipart/form-data; boundary={boundary}"},
-        method="POST",
-    )
-    with urllib.request.urlopen(req, timeout=20) as resp:
-        upload_res = json.loads(resp.read().decode())
+    try:
+        req = urllib.request.Request(
+            f"{DOTNET_BASE_URL}/api/upload",
+            data=body,
+            headers={"Content-Type": f"multipart/form-data; boundary={boundary}"},
+            method="POST",
+        )
+        with urllib.request.urlopen(req, timeout=20) as resp:
+            upload_res = json.loads(resp.read().decode())
+    except Exception as e:
+        raise HTTPException(status_code=502, detail=f".NET upload service error: {e}")
 
-    idx_req = urllib.request.Request(SPRING_INDEX_URL, data=b"", method="POST")
-    with urllib.request.urlopen(idx_req, timeout=30) as resp:
-        index_res = json.loads(resp.read().decode())
+    try:
+        idx_req = urllib.request.Request(SPRING_INDEX_URL, data=b"", method="POST")
+        with urllib.request.urlopen(idx_req, timeout=30) as resp:
+            index_res = json.loads(resp.read().decode())
+    except Exception as e:
+        raise HTTPException(status_code=502, detail=f"Java indexer service error: {e}")
 
     return {"upload": upload_res, "index": index_res}
 
+
 @app.post("/api/chat")
 def chat(req: ChatRequest):
-    local_ctx = retrieve_local(req.query)
-    web_ctx = search_web(req.query) if req.use_web else []
-    context_block = ""
-    if local_ctx:
-        context_block += "Verified Portfolio & Uploaded PDF Context:\n- " + "\n- ".join(local_ctx) + "\n\n"
-    if web_ctx:
-        context_block += "Live Web Search Context:\n- " + "\n- ".join(web_ctx) + "\n\n"
+    local_hits = retrieve_local_context(req.query)
+    web_hits = search_web(req.query) if req.use_web else []
+    context_block = "\n".join(local_hits + web_hits)
 
     system_prompt = (
         "You are Brighton Kimani's AI Portfolio Concierge. "
-        "Answer strictly from the provided Verified Portfolio & Uploaded PDF Context when relevant. "
-        "Never invent facts not present in context."
+        "Always refer to Brighton Kimani in the third person (he/his). "
+        "Answer strictly and concisely using ONLY the Verified Context below. "
+        "Never invent roles, years of experience, or skills not stated in the Verified Context. "
+        "Write in clean plain sentences without markdown asterisks or pipe tables.\n\n"
+        f"Verified Context:\n{context_block}"
     )
+
     payload = json.dumps({
         "model": "qwen2.5-0.5b",
         "messages": [
             {"role": "system", "content": system_prompt},
-            {"role": "user", "content": f"{context_block}Question: {req.query}"}
+            {"role": "user", "content": req.query},
         ],
-        "temperature": 0.2,
-        "max_tokens": 320
+        "temperature": 0.1,
+        "max_tokens": 220,
     }).encode("utf-8")
 
-    http_req = urllib.request.Request(LLAMA_URL, data=payload, headers={"Content-Type": "application/json"})
-    with urllib.request.urlopen(http_req, timeout=60) as resp:
-        answer = json.loads(resp.read().decode())["choices"][0]["message"]["content"]
+    try:
+        http_req = urllib.request.Request(
+            LLM_URL,
+            data=payload,
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
+        with urllib.request.urlopen(http_req, timeout=60) as resp:
+            result = json.loads(resp.read().decode())
+            answer = result["choices"][0]["message"]["content"].strip()
+    except Exception as e:
+        answer = f"LLM inference error: {e}"
 
-    return {"answer": answer, "local_sources": local_ctx, "web_sources": web_ctx}
+    total_srcs = len(local_hits) + len(web_hits)
+    try:
+        save_payload = json.dumps({
+            "SessionId": req.session_id,
+            "UserQuery": req.query,
+            "AssistantAnswer": answer,
+            "SourcesCount": total_srcs,
+        }).encode("utf-8")
+        dotnet_req = urllib.request.Request(
+            f"{DOTNET_BASE_URL}/api/chat/sanitize-and-save",
+            data=save_payload,
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
+        with urllib.request.urlopen(dotnet_req, timeout=10) as dresp:
+            ddata = json.loads(dresp.read().decode())
+            answer = ddata.get("cleanedAnswer", answer)
+    except Exception:
+        pass
+
+    return {
+        "answer": answer,
+        "local_sources": local_hits,
+        "web_sources": web_hits,
+    }
