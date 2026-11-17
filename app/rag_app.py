@@ -9,6 +9,21 @@ from pydantic import BaseModel
 app = FastAPI(title="Brighton Kimani Portfolio RAG API")
 
 APP_DIR = Path(__file__).resolve().parent
+import shutil
+
+PROPOSALS_PATH = Path("/shared/kb/proposals_offers.json")
+
+def ensure_baseline_kb():
+    for target in [Path("/shared/kb/knowledge_base.json"), APP_DIR / "knowledge_base.json"]:
+        try:
+            target.parent.mkdir(parents=True, exist_ok=True)
+            if not target.exists() and (APP_DIR / "knowledge_base.json").exists() and target != (APP_DIR / "knowledge_base.json"):
+                shutil.copy2(APP_DIR / "knowledge_base.json", target)
+        except Exception:
+            pass
+
+ensure_baseline_kb()
+
 if (APP_DIR / "static").exists():
     app.mount("/static", StaticFiles(directory=str(APP_DIR / "static")), name="static")
 if (APP_DIR.parent / "public").exists():

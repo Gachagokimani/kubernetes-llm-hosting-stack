@@ -15,40 +15,34 @@ spec:
       labels:
         app: doc-indexer-spring
     spec:
-      initContainers:
-      - name: compile-java-indexer
+      containers:
+      - name: doc-indexer-spring
         image: eclipse-temurin:17-jdk-alpine
         command:
         - /bin/sh
         - -c
         - |
-          apk add --no-cache git &&
-          git clone --depth 1 https://github.com/Gachagokimani/kubernetes-llm-hosting-stack.git /tmp/repo &&
-          mkdir -p /app &&
-          javac -d /app /tmp/repo/services/spring-indexer/src/main/java/com/brighton/indexer/IndexerApplication.java
-        volumeMounts:
-        - name: app-bin
-          mountPath: /app
-      containers:
-      - name: doc-indexer-spring
-        image: eclipse-temurin:17-jre-alpine
-        command: ["java", "-Xms32m", "-Xmx96m", "-XX:+UseSerialGC", "-cp", "/app", "com.brighton.indexer.IndexerApplication"]
+          mkdir -p /app/com/brighton/indexer &&
+          cp /config/IndexerApplication.java /app/com/brighton/indexer/ &&
+          javac -d /app /app/com/brighton/indexer/IndexerApplication.java &&
+          java -Xms32m -Xmx96m -XX:+UseSerialGC -cp /app com.brighton.indexer.IndexerApplication
         envFrom:
         - configMapRef:
             name: shared-app-config
         ports:
         - containerPort: 8080
         volumeMounts:
-        - name: app-bin
-          mountPath: /app
+        - name: java-src
+          mountPath: /config
         - name: shared-storage
           mountPath: /shared
         resources:
           requests: { memory: "64Mi", cpu: "25m" }
           limits: { memory: "160Mi", cpu: "250m" }
       volumes:
-      - name: app-bin
-        emptyDir: {}
+      - name: java-src
+        configMap:
+          name: java-indexer-src
       - name: shared-storage
         persistentVolumeClaim:
           claimName: rag-shared-pvc
