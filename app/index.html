@@ -310,8 +310,15 @@
         Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC',
         navigator.platform || 'web'
       ].join('|');
-      const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(raw));
-      const hex = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('').slice(0, 24);
+      let hex = '';
+      if (window.crypto && window.crypto.subtle) {
+        const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(raw));
+        hex = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('').slice(0, 24);
+      } else {
+        let h = 2166136261;
+        for (let i = 0; i < raw.length; i++) { h ^= raw.charCodeAt(i); h = Math.imul(h, 16777619); }
+        hex = (h >>> 0).toString(16).padStart(8, '0') + raw.length.toString(16);
+      }
       const fp = 'fp-' + hex;
       localStorage.setItem('bk_concierge_fp', fp);
       return fp;
@@ -351,12 +358,10 @@
       const willExpand = !panel.classList.contains('expanded');
 
       if (willExpand) {
-        document.body.appendChild(backdrop);
-        document.body.appendChild(panel);
         panel.classList.add('expanded');
-        backdrop.classList.add('active');
+        if (backdrop) backdrop.classList.add('active');
         document.body.style.overflow = 'hidden';
-        label.textContent = 'Close (Esc)';
+        if (label) label.textContent = 'Close (Esc)';
         if (icon) icon.innerHTML = ICON_MIN;
         if (bar) bar.style.display = 'none';
       } else {
@@ -370,16 +375,12 @@
       const label = document.getElementById('expandLabel');
       const icon = document.getElementById('expandIcon');
       const bar = document.getElementById('blowoutBar');
-      const home = document.getElementById('aiPanelHome');
-      if (panel && panel.classList.contains('expanded')) {
-        panel.classList.remove('expanded');
-        backdrop.classList.remove('active');
-        document.body.style.overflow = '';
-        label.textContent = 'Expand';
-        if (icon) icon.innerHTML = ICON_MAX;
-        if (bar) bar.style.display = 'flex';
-        if (home && home.parentNode) home.parentNode.insertBefore(panel, home.nextSibling);
-      }
+      if (panel) panel.classList.remove('expanded');
+      if (backdrop) backdrop.classList.remove('active');
+      document.body.style.overflow = '';
+      if (label) label.textContent = 'Expand';
+      if (icon) icon.innerHTML = ICON_MAX;
+      if (bar) bar.style.display = 'flex';
     }
 
     document.addEventListener('keydown', (e) => {

@@ -886,3 +886,26 @@ svg.lucide {
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+
+/* Stationary DOM Blowout Fix: prevent .hero transform from trapping position:fixed */
+.hero.reveal.visible {
+  transform: none !important;
+}
+
+.ai-panel.expanded {
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  width: min(920px, 94vw) !important;
+  height: min(86vh, 780px) !important;
+  max-height: 86vh !important;
+  z-index: 9999 !important;
+  margin: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  background: #062414 !important;
+  border: 1.5px solid var(--safaricom-emerald) !important;
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.9) !important;
+}
