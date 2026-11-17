@@ -5,6 +5,8 @@ metadata:
   namespace: ai-stack
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: doc-indexer-spring
@@ -14,32 +16,41 @@ spec:
         app: doc-indexer-spring
     spec:
       initContainers:
-      - name: fetch-spring-src
-        image: alpine/git:2.47.2
-        command: ["/bin/sh", "-c", "git clone --depth 1 https://github.com/Gachagokimani/kubernetes-llm-hosting-stack.git /tmp/repo && cp -r /tmp/repo/services/spring-indexer/* /src/"]
+      - name: build-spring-jar
+        image: maven:3.9.9-eclipse-temurin-17
+        command:
+        - /bin/sh
+        - -c
+        - |
+          git clone --depth 1 https://github.com/Gachagokimani/kubernetes-llm-hosting-stack.git /tmp/repo &&
+          cd /tmp/repo/services/spring-indexer &&
+          mvn clean package -DskipTests -B &&
+          cp target/*.jar /app/app.jar
+        resources:
+          requests: { memory: "256Mi", cpu: "200m" }
+          limits: { memory: "768Mi", cpu: "500m" }
         volumeMounts:
-        - name: src
-          mountPath: /src
+        - name: app-bin
+          mountPath: /app
       containers:
       - name: doc-indexer-spring
-        image: maven:3.9.9-eclipse-temurin-17
-        workingDir: /src
-        command: ["mvn", "spring-boot:run"]
+        image: eclipse-temurin:17-jre-alpine
+        command: ["java", "-Xms64m", "-Xmx160m", "-XX:+UseSerialGC", "-jar", "/app/app.jar"]
         envFrom:
         - configMapRef:
             name: shared-app-config
         ports:
         - containerPort: 8080
         volumeMounts:
-        - name: src
-          mountPath: /src
+        - name: app-bin
+          mountPath: /app
         - name: shared-storage
           mountPath: /shared
         resources:
-          requests: { memory: "384Mi", cpu: "100m" }
-          limits: { memory: "896Mi" }
+          requests: { memory: "128Mi", cpu: "50m" }
+          limits: { memory: "256Mi", cpu: "300m" }
       volumes:
-      - name: src
+      - name: app-bin
         emptyDir: {}
       - name: shared-storage
         persistentVolumeClaim:
