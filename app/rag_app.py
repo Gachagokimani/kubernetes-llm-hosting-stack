@@ -71,27 +71,58 @@ def load_all_kb_entries():
     return entries
 
 
+BROAD_INTENT_EXPANSIONS = {
+    "technology": {"safaricom", "terraform", "kubernetes", "devops", "automation", "aiops", "competencies"},
+    "tech": {"safaricom", "terraform", "kubernetes", "devops", "automation", "aiops", "competencies"},
+    "competency": {"competencies", "safaricom", "bill", "motors", "terraform", "kubernetes", "automation"},
+    "competencies": {"competencies", "safaricom", "bill", "motors", "terraform", "kubernetes", "automation"},
+    "skills": {"competencies", "safaricom", "bill", "motors", "terraform", "kubernetes", "automation"},
+    "experience": {"safaricom", "bill", "motors", "automation", "engineer", "aiops"},
+    "background": {"identity", "education", "safaricom", "bill", "motors"},
+    "work": {"safaricom", "bill", "motors", "automation", "engineer"},
+    "career": {"safaricom", "bill", "motors", "identity", "education"},
+    "projects": {"kubernetes", "terraform", "safaricom", "bill", "motors"},
+}
+
+
 def retrieve_local_context(query: str, top_k: int = 3):
     entries = load_all_kb_entries()
     if not entries:
         return []
-    q_words = set(re.findall(r"[a-z0-9]{3,}", query.lower()))
+
+    raw_words = set(re.findall(r"[a-z0-9]{3,}", query.lower()))
+    expanded_words = set(raw_words)
+    for w in raw_words:
+        if w in BROAD_INTENT_EXPANSIONS:
+            expanded_words.update(BROAD_INTENT_EXPANSIONS[w])
+
     scored = []
-    identity_fallback = None
+    priority_fallbacks = []
     for item in entries:
         topic = item.get("topic", "")
         content = item.get("content", "")
-        text = f"{topic} {content}".lower()
-        if "identity" in topic.lower():
-            identity_fallback = f"[{topic}] {content}"
-        score = sum(1 for w in q_words if w in text)
-        if score > 0:
-            scored.append((score, f"[{topic}] {content}"))
+        topic_l = topic.lower()
+        text = f"{topic_l} {content.lower()}"
+        formatted = f"[{topic}] {content}"
+
+        if any(k in topic_l for k in ("identity", "safaricom", "bill motors", "competenc")):
+            priority_fallbacks.append(formatted)
+
+        # Direct query word matches weigh 3x; expanded intent keywords weigh 1x
+        direct_score = sum(3 for w in raw_words if w in text)
+        intent_score = sum(1 for w in (expanded_words - raw_words) if w in text)
+        total_score = direct_score + intent_score
+        if total_score > 0:
+            scored.append((total_score, formatted))
+
     scored.sort(key=lambda x: x[0], reverse=True)
     hits = [s[1] for s in scored[:top_k]]
-    # Always ground greetings/vague queries in Brighton's real Identity & Education entry
-    if not hits and identity_fallback:
-        hits = [identity_fallback]
+
+    # For greetings or open follow-ups ("hi", "anything else"), ground in Identity + Safaricom + Bill Motors
+    if not hits:
+        hits = priority_fallbacks[:top_k] if priority_fallbacks else [
+            f"[{e.get('topic', '')}] {e.get('content', '')}" for e in entries[:top_k]
+        ]
     return hits
 
 
