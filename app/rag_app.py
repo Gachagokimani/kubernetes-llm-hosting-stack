@@ -11,6 +11,8 @@ app = FastAPI(title="Brighton Kimani Portfolio RAG API")
 APP_DIR = Path(__file__).resolve().parent
 if (APP_DIR / "static").exists():
     app.mount("/static", StaticFiles(directory=str(APP_DIR / "static")), name="static")
+if (APP_DIR.parent / "public").exists():
+    app.mount("/public", StaticFiles(directory=str(APP_DIR.parent / "public")), name="public")
 
 LLAMA_URL = os.getenv("LLAMA_URL", "http://llama-server:8080/v1/chat/completions")
 SEARXNG_URL = os.getenv("SEARXNG_URL", "http://searxng:8080/search")

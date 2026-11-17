@@ -8,39 +8,49 @@
   <link rel="stylesheet" href="/static/design-system.css" />
   <script src="https://unpkg.com/lucide@latest"></script>
   <style>
-    .hero-svg-avatar {
-      width: 92px;
-      height: 92px;
+    .portrait-ring {
+      width: 96px;
+      height: 96px;
       border-radius: 50%;
+      padding: 3px;
+      background: linear-gradient(135deg, var(--jungle-mint), var(--turquoise), var(--crimson));
+      box-shadow: 0 0 28px rgba(116, 198, 157, 0.38);
       flex-shrink: 0;
-      box-shadow: 0 0 28px rgba(116, 198, 157, 0.35);
       transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease;
     }
-    .hero-svg-avatar:hover {
+    .portrait-ring:hover {
       transform: scale(1.06);
       box-shadow: 0 0 36px rgba(6, 182, 212, 0.55);
+    }
+    .portrait-ring img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 22%;
+      border-radius: 50%;
+      display: block;
+      border: 2px solid var(--bg-jungle-deep);
     }
     .project-logo-banner {
       display: flex;
       align-items: center;
-      gap: 0.85rem;
-      margin-bottom: 0.9rem;
+      gap: 0.9rem;
+      margin-bottom: 0.95rem;
     }
-    .project-logo-box {
-      width: 54px;
-      height: 54px;
+    .project-logo-img {
+      width: 58px;
+      height: 58px;
       border-radius: 14px;
-      background: rgba(9, 25, 19, 0.92);
+      object-fit: cover;
       border: 1px solid var(--jungle-border);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      background: var(--bg-jungle-deep);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
       flex-shrink: 0;
-      transition: border-color 0.28s ease, transform 0.28s ease;
+      transition: transform 0.28s ease, border-color 0.28s ease;
     }
-    .project-card:hover .project-logo-box {
+    .project-card:hover .project-logo-img {
+      transform: translateY(-2px) scale(1.06);
       border-color: var(--turquoise);
-      transform: translateY(-2px) scale(1.05);
     }
   </style>
 </head>
@@ -68,42 +78,9 @@
     <header class="hero">
       <div>
         <div class="identity-row">
-          <!-- Custom Geometric Vector Portrait SVG (Safaricom De{co}dE Stage Edition) -->
-          <svg class="hero-svg-avatar" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Brighton Kimani Vector Portrait">
-            <defs>
-              <linearGradient id="ringGrad" x1="0" y1="0" x2="120" y2="120" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stop-color="#74c69d"/>
-                <stop offset="50%" stop-color="#06b6d4"/>
-                <stop offset="100%" stop-color="#e11d48"/>
-              </linearGradient>
-              <radialGradient id="stageBg" cx="50%" cy="40%" r="60%">
-                <stop offset="0%" stop-color="#1b4332"/>
-                <stop offset="100%" stop-color="#091913"/>
-              </radialGradient>
-              <clipPath id="avatarClip">
-                <circle cx="60" cy="60" r="53"/>
-              </clipPath>
-            </defs>
-            <circle cx="60" cy="60" r="57" stroke="url(#ringGrad)" stroke-width="3"/>
-            <g clip-path="url(#avatarClip)">
-              <circle cx="60" cy="60" r="53" fill="url(#stageBg)"/>
-              <!-- Circuit Backdrop Lines -->
-              <circle cx="60" cy="48" r="36" stroke="#40916c" stroke-width="1.2" stroke-dasharray="4 3" opacity="0.65"/>
-              <path d="M24 20V42M96 20V42M34 15V34M86 15V34" stroke="#52b788" stroke-width="1" opacity="0.45"/>
-              <!-- Shoulders & De{co}dE Tee -->
-              <path d="M22 114C24 91 39 81 60 81C81 81 96 91 98 114H22Z" fill="#11181c" stroke="#40916c" stroke-width="1.5"/>
-              <text x="60" y="99" text-anchor="middle" fill="#74c69d" font-family="monospace" font-size="8.5" font-weight="700">De{c0}dE</text>
-              <!-- Neck & Head Silhouette -->
-              <rect x="53" y="66" width="14" height="17" rx="6" fill="#8d5b4c"/>
-              <ellipse cx="60" cy="49" rx="16.5" ry="20.5" fill="#9c6654"/>
-              <path d="M43.5 45C43.5 33 50 27.5 60 27.5C70 27.5 76.5 33 76.5 45C75 37 69 34 60 34C51 34 45 37 43.5 45Z" fill="#182026"/>
-              <!-- Subtle Facial Geometry -->
-              <circle cx="54" cy="48" r="1.6" fill="#182026"/>
-              <circle cx="66" cy="48" r="1.6" fill="#182026"/>
-              <path d="M55 57.5C57.5 59.5 62.5 59.5 65 57.5" stroke="#4a2c24" stroke-width="1.6" stroke-linecap="round"/>
-            </g>
-          </svg>
-
+          <div class="portrait-ring">
+            <img src="/public/profile.jpg" onerror="this.onerror=null;this.src='https://raw.githubusercontent.com/Gachagokimani/kubernetes-llm-hosting-stack/main/public/profile.jpg';" alt="Brighton Kimani at Safaricom Decode" />
+          </div>
           <div>
             <div class="status-pill"><span class="pulse-dot"></span> Live on Kubernetes &bull; Nairobi, Kenya</div>
             <div style="font-size:0.86rem;color:var(--text-secondary);margin-top:0.4rem;">Brighton Kimani &mdash; Systems &amp; AI Infrastructure Engineer</div>
@@ -131,14 +108,14 @@
           <span class="ai-badge">llama.cpp + RAG</span>
         </div>
         <div id="chat">
-          <div class="msg bot-msg">Hello. I am running live inside Brighton's Kubernetes cluster. Select a prompt below or ask about his Safaricom AIOps engineering, Terraform infrastructure, or open-source repositories.</div>
+          <div class="msg bot-msg">Hello. I am running live inside Brighton's Kubernetes cluster. Upload a PDF below or ask about his Safaricom AIOps engineering, Terraform infrastructure, or open-source repositories.</div>
         </div>
         <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;padding:0.5rem 0.65rem;border-radius:8px;background:rgba(9,25,19,0.72);border:1px dashed var(--jungle-highlight);">
-  <i data-lucide="file-up" style="color:var(--jungle-mint);"></i>
-  <input id="pdfFile" type="file" accept="application/pdf" style="font-size:0.76rem;color:var(--text-secondary);flex:1;" />
-  <button type="button" onclick="uploadPdf()" style="padding:0.35rem 0.7rem;border-radius:6px;border:none;font-size:0.76rem;font-weight:600;color:#fff;background:var(--crimson);cursor:pointer;">Upload &amp; Index</button>
-</div>
-<div class="chips">
+          <i data-lucide="file-up" style="color:var(--jungle-mint);"></i>
+          <input id="pdfFile" type="file" accept="application/pdf" style="font-size:0.76rem;color:var(--text-secondary);flex:1;" />
+          <button type="button" onclick="uploadPdf()" style="padding:0.35rem 0.7rem;border-radius:6px;border:none;font-size:0.76rem;font-weight:600;color:#fff;background:var(--crimson);cursor:pointer;">Upload &amp; Index</button>
+        </div>
+        <div class="chips">
           <span class="chip" onclick="askPreset('What did Brighton build at Safaricom PLC?')">Safaricom AIOps</span>
           <span class="chip" onclick="askPreset('Summarize Brighton DevOps and Terraform skills')">DevOps &amp; Terraform</span>
           <span class="chip" onclick="askPreset('How does this Kubernetes LLM stack work?')">K8s LLM Stack</span>
@@ -158,18 +135,10 @@
       <p class="section-sub">A glimpse into open-source AI infrastructure, automation platforms, and scalable full-stack systems.</p>
 
       <div class="projects-grid">
-        <!-- 1. kubernetes-llm-hosting-stack Custom SVG Logo -->
         <article class="project-card featured">
           <div>
             <div class="project-logo-banner">
-              <div class="project-logo-box">
-                <svg width="36" height="36" viewBox="0 0 48 48" fill="none">
-                  <circle class="svg-spin-slow" cx="24" cy="24" r="19" stroke="#74c69d" stroke-width="2" stroke-dasharray="6 4" />
-                  <polygon points="24,9 37,16.5 37,31.5 24,39 11,31.5 11,16.5" stroke="#06b6d4" stroke-width="2" fill="rgba(6,182,212,0.14)" />
-                  <path d="M24 9V18M37 16.5L29 21M37 31.5L29 27M24 39V30M11 31.5L19 27M11 16.5L19 21" stroke="#74c69d" stroke-width="1.5"/>
-                  <circle class="svg-pulse-node" cx="24" cy="24" r="4.5" fill="#e11d48" />
-                </svg>
-              </div>
+              <img class="project-logo-img" src="/public/k8-llm.png" onerror="this.onerror=null;this.src='https://raw.githubusercontent.com/Gachagokimani/kubernetes-llm-hosting-stack/main/public/k8-llm.png';" alt="kubernetes-llm-hosting-stack logo" />
               <div style="flex:1;">
                 <div class="project-meta" style="margin-bottom:0.2rem;">
                   <span class="lang-badge"><i data-lucide="server"></i> K8s &bull; Python</span>
@@ -183,18 +152,10 @@
           <a href="https://github.com/Gachagokimani/kubernetes-llm-hosting-stack" target="_blank" rel="noopener" class="project-link">Inspect Architecture &amp; Source <i data-lucide="arrow-up-right"></i></a>
         </article>
 
-        <!-- 2. rhomes Custom SVG Logo -->
         <article class="project-card">
           <div>
             <div class="project-logo-banner">
-              <div class="project-logo-box">
-                <svg width="36" height="36" viewBox="0 0 48 48" fill="none">
-                  <path d="M9 24L24 10L39 24" stroke="#06b6d4" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
-                  <path d="M14 21V37H34V21" stroke="#74c69d" stroke-width="2.2" fill="rgba(116,198,157,0.12)"/>
-                  <path d="M21 37V28H27V37" stroke="#e11d48" stroke-width="2"/>
-                  <circle class="svg-pulse-node" cx="36" cy="13" r="3.5" fill="#74c69d"/>
-                </svg>
-              </div>
+              <img class="project-logo-img" src="/public/rhomes.png" onerror="this.onerror=null;this.src='https://raw.githubusercontent.com/Gachagokimani/kubernetes-llm-hosting-stack/main/public/rhomes.png';" alt="rhomes logo" />
               <div style="flex:1;">
                 <div class="project-meta" style="margin-bottom:0.2rem;">
                   <span class="lang-badge"><i data-lucide="code-2"></i> TypeScript</span>
@@ -208,18 +169,10 @@
           <a href="https://github.com/Gachagokimani/rhomes" target="_blank" rel="noopener" class="project-link">Inspect Repository <i data-lucide="arrow-up-right"></i></a>
         </article>
 
-        <!-- 3. Cybersmarter-business-system Custom SVG Logo -->
         <article class="project-card">
           <div>
             <div class="project-logo-banner">
-              <div class="project-logo-box">
-                <svg width="36" height="36" viewBox="0 0 48 48" fill="none">
-                  <path d="M24 8L38 14V25C38 33 31.8 38.8 24 41C16.2 38.8 10 33 10 25V14L24 8Z" stroke="#74c69d" stroke-width="2.2" fill="rgba(64,145,108,0.14)"/>
-                  <rect x="17" y="18" width="6" height="6" rx="1.5" stroke="#06b6d4" stroke-width="1.8"/>
-                  <rect x="25" y="18" width="6" height="6" rx="1.5" stroke="#06b6d4" stroke-width="1.8"/>
-                  <path d="M20 24V28H28V24M24 28V33" stroke="#e11d48" stroke-width="2" stroke-linecap="round"/>
-                </svg>
-              </div>
+              <img class="project-logo-img" src="/public/CyberSmarter.png" onerror="this.onerror=null;this.src='https://raw.githubusercontent.com/Gachagokimani/kubernetes-llm-hosting-stack/main/public/CyberSmarter.png';" alt="Cybersmarter-business-system logo" />
               <div style="flex:1;">
                 <div class="project-meta" style="margin-bottom:0.2rem;">
                   <span class="lang-badge"><i data-lucide="code-2"></i> TypeScript</span>
@@ -233,21 +186,10 @@
           <a href="https://github.com/Gachagokimani/Cybersmarter-business-system" target="_blank" rel="noopener" class="project-link">Inspect Repository <i data-lucide="arrow-up-right"></i></a>
         </article>
 
-        <!-- 4. firstlight-apartment Custom SVG Logo -->
         <article class="project-card">
           <div>
             <div class="project-logo-banner">
-              <div class="project-logo-box">
-                <svg width="36" height="36" viewBox="0 0 48 48" fill="none">
-                  <path d="M12 15C15 11 19 9 24 9C29 9 33 11 36 15" stroke="#e11d48" stroke-width="2" stroke-linecap="round"/>
-                  <rect x="15" y="16" width="18" height="23" rx="2" stroke="#74c69d" stroke-width="2.2" fill="rgba(116,198,157,0.12)"/>
-                  <rect x="19" y="20" width="4" height="4" fill="#06b6d4"/>
-                  <rect x="25" y="20" width="4" height="4" fill="#06b6d4"/>
-                  <rect x="19" y="26" width="4" height="4" fill="#06b6d4"/>
-                  <rect x="25" y="26" width="4" height="4" fill="#06b6d4"/>
-                  <rect x="22" y="33" width="4" height="6" fill="#e11d48"/>
-                </svg>
-              </div>
+              <img class="project-logo-img" src="/public/firstlight.png" onerror="this.onerror=null;this.src='https://raw.githubusercontent.com/Gachagokimani/kubernetes-llm-hosting-stack/main/public/firstlight.png';" alt="firstlight-apartment logo" />
               <div style="flex:1;">
                 <div class="project-meta" style="margin-bottom:0.2rem;">
                   <span class="lang-badge"><i data-lucide="code-2"></i> JavaScript</span>
@@ -400,25 +342,26 @@
     }
 
     async function uploadPdf() {
-  const fileInput = document.getElementById("pdfFile");
-  const chat = document.getElementById("chat");
-  if (!fileInput.files.length) return;
-  const fd = new FormData();
-  fd.append("file", fileInput.files[0]);
-  chat.innerHTML += `<div class="msg"><span class="user-msg">System:</span> Uploading and indexing ${fileInput.files[0].name}...</div>`;
-  chat.scrollTop = chat.scrollHeight;
-  try {
-    const res = await fetch("/api/upload-pdf", { method: "POST", body: fd });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.detail || "Upload failed");
-    chat.innerHTML += `<div class="msg"><span class="bot-msg"><b>PVC Pipeline:</b> Stored <code>${data.upload.filename}</code> via .NET 8 and indexed via Spring Boot (Total KB entries: ${data.index.totalKnowledgeEntries}).</span></div>`;
-  } catch (e) {
-    chat.innerHTML += `<div class="msg" style="color:#fb7185;">Upload error: ${e.message}</div>`;
-  }
-  fileInput.value = "";
-  chat.scrollTop = chat.scrollHeight;
-}
-async function send() {
+      const fileInput = document.getElementById('pdfFile');
+      const chat = document.getElementById('chat');
+      if (!fileInput.files.length) return;
+      const fd = new FormData();
+      fd.append('file', fileInput.files[0]);
+      chat.innerHTML += `<div class="msg"><span class="user-msg">System:</span> Uploading and indexing ${fileInput.files[0].name}...</div>`;
+      chat.scrollTop = chat.scrollHeight;
+      try {
+        const res = await fetch('/api/upload-pdf', { method: 'POST', body: fd });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.detail || 'Upload failed');
+        chat.innerHTML += `<div class="msg"><span class="bot-msg"><b>PVC Pipeline:</b> Stored <code>${data.upload.filename}</code> via .NET 8 and indexed via Spring Boot (Total KB entries: ${data.index.totalKnowledgeEntries}).</span></div>`;
+      } catch (e) {
+        chat.innerHTML += `<div class="msg" style="color:#fb7185;">Upload error: ${e.message}</div>`;
+      }
+      fileInput.value = '';
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    async function send() {
       const qInput = document.getElementById('q');
       const btn = document.getElementById('btn');
       const chat = document.getElementById('chat');
