@@ -37,6 +37,66 @@ try:
 except Exception as _seed_err:
     print("KB seed warning:", _seed_err)
 
+STOPWORDS = {
+    "the", "and", "for", "with", "what", "does", "have", "about", "tell",
+    "brighton", "kimani", "this", "that", "from", "into", "are", "his",
+    "how", "use", "engage", "following", "other"
+}
+
+QUERY_GROUPS = {
+    "certifications": {"cert", "certificate", "certifications", "certification", "skillsoft", "credential", "credentials", "ef", "set", "english", "istqb", "badge"},
+    "security": {"rbac", "sso", "oauth", "jwt", "secret", "secrets", "etcd", "auth", "login", "security", "devsecops", "encryption", "token", "admin", "proposals", "proposal"},
+    "projects": {"project", "projects", "repo", "repos", "repository", "repositories", "github", "rhomes", "cybersmarter", "firstlight", "concierge", "self", "hosted"},
+    "architecture": {"k8s", "kubernetes", "llama", "gguf", "searxng", "dotnet", ".net", "java", "spring", "fastapi", "pod", "pvc", "architecture", "stack", "ram", "microservice"},
+    "experience": {"experience", "work", "worked", "job", "safaricom", "glimpse", "bill", "motors", "aiops", "uipath", "n8n", "terraform", "career", "role"},
+    "education": {"education", "degree", "bsc", "university", "kirinyaga", "thesis", "blockchain", "referee", "referees", "gilbert", "joyce", "winrose"},
+}
+
+def _route_query_groups(query: str) -> set[str]:
+    tokens = set(re.findall(r"[a-z0-9.+]+", query.lower()))
+    matched = {grp for grp, kws in QUERY_GROUPS.items() if tokens & kws}
+    return matched or set(QUERY_GROUPS.keys())
+
+def _score_single_query(sub_q: str, kb: list[dict], per_q_limit: int = 2) -> list[tuple[int, str, str]]:
+    q_tokens = {t for t in re.findall(r"[a-z0-9.+]+", sub_q.lower()) if len(t) > 1 and t not in STOPWORDS}
+    target_groups = _route_query_groups(sub_q)
+    # If user asks about repos/projects, prioritize projects first so .NET 8 architecture doesn't drown them out
+    if "projects" in target_groups and "dotnet" not in q_tokens and ".net" not in q_tokens and "rbac" not in q_tokens:
+        target_groups = {"projects"}
+    filtered_kb = [x for x in kb if x.get("category", "architecture") in target_groups] or kb
+
+    scored = []
+    for item in filtered_kb:
+        topic = item.get("topic", "")
+        content = item.get("content", "")
+        t_tokens = set(re.findall(r"[a-z0-9.+]+", topic.lower()))
+        c_tokens = set(re.findall(r"[a-z0-9.+]+", content.lower()))
+        score = (4 * len(q_tokens & t_tokens)) + len(q_tokens & c_tokens)
+        if score > 0:
+            scored.append((score, topic, content))
+    scored.sort(key=lambda x: x[0], reverse=True)
+    limit = 4 if target_groups == {"certifications"} else per_q_limit
+    return scored[:limit]
+
+def retrieve_context(query: str, top_k: int = 4) -> str:
+    if not os.path.exists(KB_FILE):
+        return ""
+    with open(KB_FILE, "r", encoding="utf-8") as f:
+        kb = json.load(f)
+
+    # Split compound multi-question prompts so each sub-question retrieves its own exact domain chunk(s)
+    sub_queries = [q.strip() for q in re.split(r"[?\n]+", query) if len(q.strip()) > 6] or [query]
+    seen_topics = set()
+    picked = []
+    per_q = 1 if len(sub_queries) > 1 else 3
+    for sq in sub_queries:
+        for _, topic, content in _score_single_query(sq, kb, per_q_limit=per_q):
+            if topic not in seen_topics:
+                seen_topics.add(topic)
+                picked.append((topic, content))
+
+    return "\n".join(f"- [{topic}]: {content}" for topic, content in picked[:6])
+
 app = FastAPI(title="Brighton Kimani Portfolio & Hybrid RAG Concierge")
 
 APP_DIR = Path(__file__).resolve().parent
@@ -243,7 +303,10 @@ def chat(req: ChatRequest):
     payload = json.dumps({
         "model": "qwen2.5-0.5b",
         "messages": [
-            {"role": "system", "content": system_prompt},
+            {"role": "system", "content": "You are Brighton Kimani's portfolio AI Concierge. Answer ONLY from the Context bullets below. Never invent links between unrelated topics (for example, never mix .NET 8 RBAC with GitHub repositories or certifications). Format answers naturally like a human engineer: start with a clear 1-sentence intro, then present points on separate lines using numbered items (1., 2., 3.) or bullets (- ).
+
+Context:
+" + context
             {"role": "user", "content": req.query},
         ],
         "temperature": 0.1,
