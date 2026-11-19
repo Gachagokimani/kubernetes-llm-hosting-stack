@@ -10,6 +10,33 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
+
+SEED_KB_PATH = os.path.join(os.path.dirname(__file__), "data", "knowledge_base.json")
+
+def _sync_seed_kb():
+    if not os.path.exists(SEED_KB_PATH):
+        return
+    os.makedirs(os.path.dirname(KB_FILE), exist_ok=True)
+    with open(SEED_KB_PATH, "r", encoding="utf-8") as f:
+        seeded = json.load(f)
+    existing = []
+    if os.path.exists(KB_FILE):
+        try:
+            with open(KB_FILE, "r", encoding="utf-8") as f:
+                existing = json.load(f)
+        except Exception:
+            existing = []
+    by_topic = {item.get("topic", ""): item for item in existing if isinstance(item, dict)}
+    for item in seeded:
+        by_topic[item["topic"]] = item
+    with open(KB_FILE, "w", encoding="utf-8") as f:
+        json.dump(list(by_topic.values()), f, indent=2)
+
+try:
+    _sync_seed_kb()
+except Exception as _seed_err:
+    print("KB seed warning:", _seed_err)
+
 app = FastAPI(title="Brighton Kimani Portfolio & Hybrid RAG Concierge")
 
 APP_DIR = Path(__file__).resolve().parent
@@ -86,7 +113,7 @@ BROAD_INTENT_EXPANSIONS = {
 }
 
 
-def retrieve_local_context(query: str, top_k: int = 3):
+def retrieve_local_context(query: str, top_k: int = 5):
     entries = load_all_kb_entries()
     if not entries:
         return []
