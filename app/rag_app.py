@@ -17,6 +17,7 @@ PROPOSALS_PATH = Path("/shared/kb/proposals_offers.json")
 LLM_URL = os.getenv("LLM_URL", "http://llama-server:8080/v1/chat/completions")
 SEARXNG_URL = os.getenv("SEARXNG_URL", "http://searxng:8080/search")
 DOTNET_BASE_URL = os.getenv("DOTNET_BASE_URL", "http://pdf-ingest-dotnet:8080")
+RBAC_BASE_URL = os.getenv("RBAC_BASE_URL", "http://rbac-sso-dotnet:8080")
 SPRING_INDEX_URL = os.getenv("SPRING_INDEX_URL", "http://doc-indexer-spring:8080/api/index/sync")
 
 

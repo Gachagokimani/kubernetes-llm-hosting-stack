@@ -47,9 +47,10 @@ run_k8s() {
   kubectl apply -n "$NAMESPACE" -f "${SCRIPT_DIR}/manifests/security/configmap-and-secret.yaml"
   kubectl apply -n "$NAMESPACE" -f "${SCRIPT_DIR}/manifests/"
   kubectl apply -n "$NAMESPACE" -f "${SCRIPT_DIR}/services/dotnet-upload/k8s-deployment.yaml"
+  kubectl apply -n "$NAMESPACE" -f "${SCRIPT_DIR}/services/dotnet-rbac/k8s-deployment.yaml"
   kubectl apply -n "$NAMESPACE" -f "${SCRIPT_DIR}/services/spring-indexer/k8s-deployment.yaml"
 
-  for d in llama-server searxng pdf-ingest-dotnet doc-indexer-spring rag-frontend; do
+  for d in llama-server searxng pdf-ingest-dotnet rbac-sso-dotnet doc-indexer-spring rag-frontend; do
     kubectl rollout status "deployment/${d}" -n "$NAMESPACE" --timeout=240s
   done
   log "Ready. UI on NodePort 30882 (llama API 30880, SearXNG 30881)."

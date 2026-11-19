@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rbac-sso-dotnet
+  namespace: ai-stack
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: rbac-sso-dotnet
+  template:
+    metadata:
+      labels:
+        app: rbac-sso-dotnet
+    spec:
+      containers:
+        - name: rbac-sso-dotnet
+          image: mcr.microsoft.com/dotnet/sdk:8.0
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              git clone --depth 1 https://github.com/Gachagokimani/kubernetes-llm-hosting-stack.git /tmp/repo &&
+              mkdir -p /src && cd /src &&
+              dotnet new web --force &&
+              cp /tmp/repo/services/dotnet-rbac/Program.cs /src/Program.cs &&
+              dotnet run --urls http://0.0.0.0:8080
+          envFrom:
+            - configMapRef:
+                name: ai-stack-config
+            - secretRef:
+                name: ai-stack-secrets
+                optional: true
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "192Mi"
+            limits:
+              cpu: "300m"
+              memory: "384Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rbac-sso-dotnet
+  namespace: ai-stack
+spec:
+  type: ClusterIP
+  selector:
+    app: rbac-sso-dotnet
+  ports:
+    - port: 8080
+      targetPort: 8080

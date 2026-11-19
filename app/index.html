@@ -6,7 +6,36 @@
   <title>Brighton Kimani | AI, Automation, DevOps &amp; SRE Portfolio</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20,500,0,0" />
   <link rel="stylesheet" href="/static/design-system.css" />
-  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://unpkg.com/lucide@latest">
+    async function initRbacSession() {
+      try {
+        const res = await fetch('/api/auth/me');
+        const auth = await res.json();
+        const isAdmin = auth.authenticated && auth.role === 'admin';
+        document.getElementById('nav-proposals-item').style.display = isAdmin ? 'inline-block' : 'none';
+        document.getElementById('adminProposalsUpload').style.display = isAdmin ? 'flex' : 'none';
+        document.getElementById('proposals-vault').style.display = isAdmin ? 'block' : 'none';
+        document.getElementById('ssoLoginBtn').style.display = isAdmin ? 'none' : 'inline-block';
+        document.getElementById('ssoLogoutBtn').style.display = isAdmin ? 'inline-block' : 'none';
+        if (isAdmin) {
+          const pRes = await fetch('/api/proposals');
+          if (pRes.ok) {
+            const pData = await pRes.json();
+            const listEl = document.getElementById('proposalsList');
+            listEl.innerHTML = (pData.proposals || []).map(p =>
+              `<div style="padding:0.75rem;border:1px solid var(--jungle-border);border-radius:8px;background:#03180d;"><strong>${p.topic}</strong><div style="font-size:0.8rem;color:#cbd5e1;margin-top:0.3rem;">${p.content}</div></div>`
+            ).join('') || '<div style="font-size:0.82rem;color:#94a3b8;">No proposals indexed yet.</div>';
+          }
+        }
+      } catch (e) { console.warn('RBAC check:', e); }
+    }
+    async function ssoLogout() {
+      await fetch('/api/auth/logout', { method: 'POST' });
+      window.location.reload();
+    }
+    window.addEventListener('DOMContentLoaded', initRbacSession);
+
+  </script>
 </head>
 <body>
   <div class="bg-orb orb-jungle"></div>
@@ -69,7 +98,7 @@
         <div id="chat">
           <div class="msg bot-msg">Hello. I am running live inside Brighton's Kubernetes cluster. Upload a PDF below or ask about his Safaricom AIOps engineering, Terraform infrastructure, or open-source repositories.</div>
         </div>
-        <div class="pdf-upload-bar">
+        <div id="adminProposalsUpload" class="pdf-upload-bar" style="display:none;">
           <i data-lucide="file-up" style="color:var(--jungle-mint);"></i>
           <input id="pdfFile" type="file" accept="application/pdf" />
           <button type="button" class="pdf-upload-btn" onclick="uploadPdf()">Upload Offer / Proposal</button>
@@ -283,6 +312,13 @@
     </section>
   </div>
 
+
+  <section id="proposals-vault" style="display:none;max-width:1120px;margin:2rem auto;padding:1.25rem;border:1px solid var(--jungle-border);border-radius:14px;background:rgba(4,31,17,0.7);">
+    <h2 style="margin-top:0;color:var(--jungle-mint);">Private Offers &amp; Proposals Vault (RBAC Admin Only)</h2>
+    <p style="font-size:0.86rem;color:#a7f3d0;">Authenticated via .NET 8 OAuth SSO with escalated privileges. Only visible to Brighton Kimani.</p>
+    <div id="proposalsList" style="display:grid;gap:0.75rem;margin-top:0.75rem;"></div>
+  </section>
+
   <footer>
     &copy; 2026 Brighton Kimani &bull; Powered by Kubernetes, Helm, FastAPI, .NET 8, Spring Boot &amp; llama.cpp
   </footer>
@@ -469,6 +505,35 @@
     }
 
     if (window.lucide) lucide.createIcons();
+  
+    async function initRbacSession() {
+      try {
+        const res = await fetch('/api/auth/me');
+        const auth = await res.json();
+        const isAdmin = auth.authenticated && auth.role === 'admin';
+        document.getElementById('nav-proposals-item').style.display = isAdmin ? 'inline-block' : 'none';
+        document.getElementById('adminProposalsUpload').style.display = isAdmin ? 'flex' : 'none';
+        document.getElementById('proposals-vault').style.display = isAdmin ? 'block' : 'none';
+        document.getElementById('ssoLoginBtn').style.display = isAdmin ? 'none' : 'inline-block';
+        document.getElementById('ssoLogoutBtn').style.display = isAdmin ? 'inline-block' : 'none';
+        if (isAdmin) {
+          const pRes = await fetch('/api/proposals');
+          if (pRes.ok) {
+            const pData = await pRes.json();
+            const listEl = document.getElementById('proposalsList');
+            listEl.innerHTML = (pData.proposals || []).map(p =>
+              `<div style="padding:0.75rem;border:1px solid var(--jungle-border);border-radius:8px;background:#03180d;"><strong>${p.topic}</strong><div style="font-size:0.8rem;color:#cbd5e1;margin-top:0.3rem;">${p.content}</div></div>`
+            ).join('') || '<div style="font-size:0.82rem;color:#94a3b8;">No proposals indexed yet.</div>';
+          }
+        }
+      } catch (e) { console.warn('RBAC check:', e); }
+    }
+    async function ssoLogout() {
+      await fetch('/api/auth/logout', { method: 'POST' });
+      window.location.reload();
+    }
+    window.addEventListener('DOMContentLoaded', initRbacSession);
+
   </script>
 </body>
 </html>
