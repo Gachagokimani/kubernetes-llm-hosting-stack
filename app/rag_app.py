@@ -175,7 +175,9 @@ BROAD_INTENT_EXPANSIONS = {
 }
 
 
-def retrieve_local_context(query: str, top_k: int = 7):
+def retrieve_local_context(query: str, limit: int = 5):
+    if any(k in query.lower() for k in ("who","stack","introduce")): query += " kubernetes-llm-hosting-stack ai-stack"
+    if any(k in query.lower() for k in ("who are you","what are you","introduce","this stack","tech stack","technology stack")): query += " kubernetes-llm-hosting-stack ai-stack architecture"
     entries = load_all_kb_entries()
     if not entries:
         return []
