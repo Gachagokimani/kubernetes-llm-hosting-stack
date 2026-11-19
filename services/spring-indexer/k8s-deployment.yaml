@@ -16,36 +16,38 @@ spec:
         app: doc-indexer-spring
     spec:
       containers:
-      - name: doc-indexer-spring
-        image: eclipse-temurin:17-jdk-alpine
-        command:
-        - /bin/sh
-        - -c
-        - |
-          mkdir -p /app/com/brighton/indexer &&
-          cp /config/IndexerApplication.java /app/com/brighton/indexer/ &&
-          javac -d /app /app/com/brighton/indexer/IndexerApplication.java &&
-          java -Xms32m -Xmx96m -XX:+UseSerialGC -cp /app com.brighton.indexer.IndexerApplication
-        envFrom:
-        - configMapRef:
-            name: shared-app-config
-        ports:
-        - containerPort: 8080
-        volumeMounts:
-        - name: java-src
-          mountPath: /config
-        - name: shared-storage
-          mountPath: /shared
-        resources:
-          requests: { memory: "64Mi", cpu: "25m" }
-          limits: { memory: "160Mi", cpu: "250m" }
+        - name: doc-indexer-spring
+          image: eclipse-temurin:17-jdk-alpine
+          command:
+            - /bin/sh
+            - -c
+            - |
+              apk add --no-cache git >/dev/null 2>&1 &&
+              git clone --depth 1 https://github.com/Gachagokimani/kubernetes-llm-hosting-stack.git /tmp/repo &&
+              mkdir -p /app/com/brighton/indexer &&
+              SRC_JAVA=$(find /tmp/repo/services/spring-indexer -name "IndexerApplication.java" | head -n 1) &&
+              cp "$SRC_JAVA" /app/com/brighton/indexer/IndexerApplication.java &&
+              javac -d /app /app/com/brighton/indexer/IndexerApplication.java &&
+              java -Xms32m -Xmx96m -XX:+UseSerialGC -cp /app com.brighton.indexer.IndexerApplication
+          envFrom:
+            - configMapRef:
+                name: ai-stack-config
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: shared-storage
+              mountPath: /shared
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "25m"
+            limits:
+              memory: "160Mi"
+              cpu: "250m"
       volumes:
-      - name: java-src
-        configMap:
-          name: java-indexer-src
-      - name: shared-storage
-        persistentVolumeClaim:
-          claimName: rag-shared-pvc
+        - name: shared-storage
+          persistentVolumeClaim:
+            claimName: rag-shared-pvc
 ---
 apiVersion: v1
 kind: Service
@@ -57,5 +59,5 @@ spec:
   selector:
     app: doc-indexer-spring
   ports:
-  - port: 8080
-    targetPort: 8080
+    - port: 8080
+      targetPort: 8080
