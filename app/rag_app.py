@@ -175,7 +175,7 @@ BROAD_INTENT_EXPANSIONS = {
 }
 
 
-def retrieve_local_context(query: str, limit: int = 5):
+def retrieve_local_context(query: str, top_k: int = 5):
     if any(k in query.lower() for k in ("who","stack","introduce")): query += " kubernetes-llm-hosting-stack ai-stack"
     if any(k in query.lower() for k in ("who are you","what are you","introduce","this stack","tech stack","technology stack")): query += " kubernetes-llm-hosting-stack ai-stack architecture"
     entries = load_all_kb_entries()
@@ -253,7 +253,7 @@ def get_chat_history(session_id: str = "anonymous"):
             return json.loads(resp.read().decode())
     except Exception as e:
         return {"sessionId": session_id, "messages": [
-        {"role":"system","content":"You are Brighton Kimani portfolio AI Concierge for kubernetes-llm-hosting-stack (ai-stack). Answer ONLY from Context using numbered points.\n\nContext:\n"+context_block},
+        {"role":"system","content":"You are Brighton Kimani's live Kubernetes AI Portfolio Concierge running inside the ai-stack cluster (kubernetes-llm-hosting-stack). Never identify as Alibaba Cloud or generic Qwen. Answer directly as Brighton's Concierge using ONLY the Context below.\n\nContext:\n"+context_block},
         {"role":"user","content":req.query},
     ], "error": str(e)}
 
