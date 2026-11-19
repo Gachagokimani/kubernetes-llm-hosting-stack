@@ -13,37 +13,40 @@ spec:
       labels:
         app: pdf-ingest-dotnet
     spec:
-      initContainers:
-      - name: fetch-dotnet-src
-        image: alpine/git:2.47.2
-        command: ["/bin/sh", "-c", "git clone --depth 1 https://github.com/Gachagokimani/kubernetes-llm-hosting-stack.git /tmp/repo && cp -r /tmp/repo/services/dotnet-upload/* /src/"]
-        volumeMounts:
-        - name: src
-          mountPath: /src
       containers:
-      - name: pdf-ingest-dotnet
-        image: mcr.microsoft.com/dotnet/sdk:8.0
-        workingDir: /src
-        command: ["dotnet", "run", "--urls", "http://0.0.0.0:5000"]
-        envFrom:
-        - configMapRef:
-            name: shared-app-config
-        ports:
-        - containerPort: 5000
-        volumeMounts:
-        - name: src
-          mountPath: /src
-        - name: shared-storage
-          mountPath: /shared
-        resources:
-          requests: { memory: "256Mi", cpu: "100m" }
-          limits: { memory: "640Mi" }
+        - name: dotnet-api
+          image: mcr.microsoft.com/dotnet/sdk:8.0
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              git clone --depth 1 https://github.com/Gachagokimani/kubernetes-llm-hosting-stack.git /tmp/repo &&
+              mkdir -p /src && cd /src &&
+              dotnet new web --force &&
+              dotnet add package Npgsql --version 8.0.5 &&
+              cp /tmp/repo/services/dotnet-upload/Program.cs /src/Program.cs &&
+              dotnet run --urls http://0.0.0.0:8080
+          envFrom:
+            - configMapRef:
+                name: ai-stack-config
+            - secretRef:
+                name: ai-stack-secrets
+                optional: true
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: shared-data
+              mountPath: /shared
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
       volumes:
-      - name: src
-        emptyDir: {}
-      - name: shared-storage
-        persistentVolumeClaim:
-          claimName: rag-shared-pvc
+        - name: shared-data
+          persistentVolumeClaim:
+            claimName: rag-shared-pvc
 ---
 apiVersion: v1
 kind: Service
@@ -51,9 +54,8 @@ metadata:
   name: pdf-ingest-dotnet
   namespace: ai-stack
 spec:
-  type: ClusterIP
   selector:
     app: pdf-ingest-dotnet
   ports:
-  - port: 5000
-    targetPort: 5000
+    - port: 8080
+      targetPort: 8080
