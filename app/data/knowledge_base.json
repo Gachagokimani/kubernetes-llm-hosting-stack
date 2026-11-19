@@ -1,28 +1,23 @@
 [
   {
     "category": "projects",
-    "topic": "Flagship Project: Self-Hosted Kubernetes LLM Portfolio Concierge (kubernetes-llm-hosting-stack)",
-    "content": "Brighton Kimani's flagship open-source repository is kubernetes-llm-hosting-stack (https://github.com/Gachagokimani/kubernetes-llm-hosting-stack) — a self-hosted Kubernetes AI Concierge engineered to run quantized GGUF LLMs (Qwen2.5-0.5B-Instruct via llama.cpp on CPU) on minimal RAM (under 4 GB) alongside hybrid RAG retrieval, SearXNG privacy-first web search, and persistent PVC storage."
+    "topic": "Flagship Live Stack: kubernetes-llm-hosting-stack (ai-stack)",
+    "content": "You are currently interacting with Brighton Kimani's flagship open-source project, kubernetes-llm-hosting-stack (https://github.com/Gachagokimani/kubernetes-llm-hosting-stack), deployed live in Kubernetes as ai-stack. It is engineered to serve quantized GGUF LLMs (Qwen2.5-0.5B-Instruct via llama.cpp on CPU) under 4 GB RAM alongside hybrid RAG retrieval, SearXNG privacy-first meta-search, and polyglot microservices (.NET 8, Java, and Python FastAPI). Feel free to ask about how any layer of this live architecture works."
   },
   {
     "category": "projects",
-    "topic": "Other Open-Source GitHub Repositories: rhomes, Cybersmarter-business-system & firstlight-apartment",
-    "content": "Beyond kubernetes-llm-hosting-stack, Brighton maintains three public repositories under https://github.com/Gachagokimani: (1) rhomes — a TypeScript scalable rental listings platform automating property discovery and tenant-landlord workflows; (2) Cybersmarter-business-system — a TypeScript end-to-end business management system for operational scaling, inventory control, and workflow automation; and (3) firstlight-apartment — a JavaScript residential rental showcase and unit inquiry web application."
+    "topic": "Other Open-Source Repositories: rhomes, Cybersmarter-business-system & firstlight-apartment",
+    "content": "Apart from this live Kubernetes AI stack you are currently engaging with, Brighton also maintains three public repositories under https://github.com/Gachagokimani: (1) rhomes — a TypeScript scalable rental listings platform automating property discovery and tenant-landlord workflows; (2) Cybersmarter-business-system — a TypeScript end-to-end business management system for operational scaling, inventory control, and workflow automation; and (3) firstlight-apartment — a JavaScript residential rental showcase and unit inquiry web application."
   },
   {
     "category": "architecture",
-    "topic": "Kubernetes Microservices & Polyglot Runtime Architecture (ai-stack)",
-    "content": "Inside the ai-stack Kubernetes namespace, Brighton orchestrates specialized microservices: llama-server (C++ llama.cpp inference engine on NodePort 30880), SearXNG (meta-search engine on NodePort 30881), rag-frontend (Python FastAPI RAG orchestrator and portfolio UI on NodePort 30882), pdf-ingest-dotnet (.NET 8 Minimal API for PDF ingestion and Markdown cleanup), doc-indexer-spring (Java HTTP indexer for offer/proposal PDFs), and rbac-sso-dotnet (.NET 8 OAuth 2.0 SSO RBAC service)."
+    "topic": "Live Kubernetes Microservice Architecture (kubernetes-llm-hosting-stack)",
+    "content": "This live portfolio stack runs as decoupled microservices inside Kubernetes: a C++ llama.cpp inference server running Qwen2.5-0.5B-Instruct Q4_K_M on CPU, a SearXNG privacy-first meta-search service, a Python FastAPI RAG orchestrator and frontend, a .NET 8 Minimal API service for document ingestion and response formatting, a Java HTTP indexer for proposal synchronization, and an independent .NET 8 RBAC/SSO access-control microservice."
   },
   {
     "category": "security",
-    "topic": ".NET 8 OAuth 2.0 SSO RBAC Microservice & Policy Decision Point",
-    "content": "Brighton built a standalone .NET 8 RBAC and OAuth 2.0 SSO microservice (services/dotnet-rbac) deployable independently via k8s-deployment.yaml. It authenticates GitHub OAuth users against ADMIN_ALLOWED_IDS, mints HttpOnly HMAC-SHA256 JWT cookies (bk_sso_token), exposes a Policy Decision Point (/api/rbac/authorize), and strictly gates the Proposals navbar link, PDF upload bar, and private Proposals Vault."
-  },
-  {
-    "category": "security",
-    "topic": "Kubernetes Secrets, ConfigMaps & etcd Encryption Hardening",
-    "content": "In manifests/security/configmap-and-secret.yaml, Brighton centralized service endpoints into ai-stack-config (ConfigMap) and isolated OAuth client secrets, JWT signing keys, and PostgreSQL connection strings into ai-stack-secrets (Opaque Secret) backed by kube-apiserver EncryptionConfiguration (aescbc) for etcd encryption at rest."
+    "topic": "Access Control & Infrastructure Hardening Overview",
+    "content": "Brighton designed this stack with defense-in-depth principles: role-based access control via an independent .NET 8 OAuth SSO service that restricts administrative proposal management to authorized owners, centralized Kubernetes configuration management, and encrypted secret storage at rest."
   },
   {
     "category": "experience",
@@ -42,41 +37,41 @@
   {
     "category": "education",
     "topic": "BSc in Information Technology — Kirinyaga University & Professional Referees",
-    "content": "Brighton Kimani earned a BSc in Information Technology from Kirinyaga University (Sep 2021 – Oct 2025), focusing on algorithms, operating systems, concurrency, AI/ML models, and full-stack engineering, with a final thesis on a blockchain-powered mobile digitized insurance claims system. He is also pursuing the ISTQB Foundation certification. Referees: Gilbert Andanje (SRE, Safaricom PLC), Joyce Wachira (Director, Bill Motors), Winrose Muthee (Founder, Journey Palette)."
+    "content": "Brighton Kimani earned a BSc in Information Technology from Kirinyaga University (Sep 2021 – Oct 2025), focusing on algorithms, operating systems, concurrency, AI/ML models, and full-stack engineering, with a final thesis on a blockchain-powered mobile digitized insurance claims system. He is also pursuing the ISTQB Foundation certification. Professional referees include Gilbert Andanje (SRE, Safaricom PLC), Joyce Wachira (Director, Bill Motors), and Winrose Muthee (Founder, Journey Palette)."
   },
   {
     "category": "certifications",
-    "topic": "Python Development (Skillsoft Credential)",
-    "content": "Brighton Kimani earned a Skillsoft credential in Python Development: Defining, Configuring, & Invoking Functions (Dec 2025, ID 17908659), demonstrating practical competency in writing, configuring, and invoking Python functions. Verified at https://www.linkedin.com/in/brighton-kimani/details/certifications/"
+    "topic": "Python Development (Skillsoft)",
+    "content": "Brighton Kimani earned a Skillsoft certification in Python Development: Defining, Configuring, & Invoking Functions (Dec 2025), demonstrating practical competency in writing, configuring, and invoking Python functions. Verified on LinkedIn: https://www.linkedin.com/in/brighton-kimani/details/certifications/"
   },
   {
     "category": "certifications",
-    "topic": "AI Frameworks & AI Developer Role (Skillsoft Credentials)",
-    "content": "Brighton completed Skillsoft's AI Framework Overview courses on Development Frameworks (ID 17901305) and the AI Developer Role (ID 17866307, Dec 2025), plus Inside Agentic AI: Popular Frameworks (ID 17757936), showing grounding in AI development frameworks and agentic AI tooling. Verified at https://www.linkedin.com/in/brighton-kimani/details/certifications/"
+    "topic": "AI Frameworks, Agentic AI & AI Developer Role (Skillsoft)",
+    "content": "Brighton completed Skillsoft's AI Framework Overview courses on Development Frameworks and the AI Developer Role (Dec 2025), plus Inside Agentic AI: Popular Frameworks, showing grounding in AI development frameworks and agentic AI tooling. Verified on LinkedIn: https://www.linkedin.com/in/brighton-kimani/details/certifications/"
   },
   {
     "category": "certifications",
-    "topic": "AI Practitioner Practice (Skillsoft Credentials)",
-    "content": "Brighton holds The AI Practitioner: Role & Responsibilities (ID 17171741) and Optimizing AI Solutions (ID 17189806) credentials (Nov 2025), covering the AI practitioner's remit and the optimization of AI solutions, with associated exposure to Robotic Process Automation and DevOps. Verified at https://www.linkedin.com/in/brighton-kimani/details/certifications/"
+    "topic": "AI Practitioner Practice (Skillsoft)",
+    "content": "Brighton holds The AI Practitioner: Role & Responsibilities and Optimizing AI Solutions credentials (Nov 2025), covering the AI practitioner's remit and the optimization of AI solutions, with associated exposure to Robotic Process Automation and DevOps. Verified on LinkedIn: https://www.linkedin.com/in/brighton-kimani/details/certifications/"
   },
   {
     "category": "certifications",
-    "topic": "AWS DevOps Engineering Professional Level (Skillsoft Credentials)",
-    "content": "Brighton completed six AWS-aligned Skillsoft modules (Nov–Dec 2025) spanning CI/CD pipelines (ID 17206237), Infrastructure as Code (ID 17807780), automated testing (ID 17813530), artifact management and security (ID 17823891), deployment strategies (ID 17850527), and Intermediate AWS DevOps & Application Deployment (ID 17843038). Verified at https://www.linkedin.com/in/brighton-kimani/details/certifications/"
+    "topic": "AWS DevOps Engineering Professional Level (Skillsoft)",
+    "content": "Brighton completed six AWS-aligned Skillsoft modules (Nov–Dec 2025) spanning CI/CD pipelines, Infrastructure as Code, automated testing, artifact management and security, deployment strategies, and Intermediate AWS DevOps & Application Deployment. Verified on LinkedIn: https://www.linkedin.com/in/brighton-kimani/details/certifications/"
   },
   {
     "category": "certifications",
     "topic": "Cloud Automation & Orchestration (CompTIA Cloud+ Skillsoft)",
-    "content": "Brighton earned the CompTIA Cloud+ module on Automation and Orchestration Troubleshooting (Dec 2025, ID 17760968), reflecting skill in automating and diagnosing cloud workflows. Verified at https://www.linkedin.com/in/brighton-kimani/details/certifications/"
+    "content": "Brighton earned the CompTIA Cloud+ module on Automation and Orchestration Troubleshooting (Dec 2025), reflecting skill in automating and diagnosing cloud workflows. Verified on LinkedIn: https://www.linkedin.com/in/brighton-kimani/details/certifications/"
   },
   {
     "category": "certifications",
-    "topic": "Agile Delivery (Skillsoft Credential)",
-    "content": "Brighton completed Agile Principles and Methodologies (Nov 2025, ID 17159242), establishing a foundation in agile ways of working for software delivery. Verified at https://www.linkedin.com/in/brighton-kimani/details/certifications/"
+    "topic": "Agile Delivery (Skillsoft)",
+    "content": "Brighton completed Agile Principles and Methodologies (Nov 2025), establishing a foundation in agile ways of working for software delivery. Verified on LinkedIn: https://www.linkedin.com/in/brighton-kimani/details/certifications/"
   },
   {
     "category": "certifications",
     "topic": "English Proficiency (EF SET C1 Advanced)",
-    "content": "Brighton holds an EF SET English Certificate with a score of 65/100 (C1 Advanced), issued May 2025, indicating advanced English communication ability. Verified at https://www.linkedin.com/in/brighton-kimani/details/certifications/"
+    "content": "Brighton holds an EF SET English Certificate with a score of 65/100 (C1 Advanced), issued May 2025, indicating advanced English communication ability. Verified on LinkedIn: https://www.linkedin.com/in/brighton-kimani/details/certifications/"
   }
 ]
