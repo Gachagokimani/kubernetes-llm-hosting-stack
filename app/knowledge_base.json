@@ -1,26 +1,77 @@
 [
   {
-    "topic": "Identity & Education",
-    "content": "Brighton Kimani is an AI, Automation, DevOps, and SRE specialist based in Nairobi (+254115482990, gachagokimani@gmail.com) holding a BSc in Information Technology from Kirinyaga University (Sep 2021 - Oct 2025), where he built a blockchain-powered mobile digitized insurance claims thesis."
+    "category": "projects",
+    "topic": "Flagship Live Stack: kubernetes-llm-hosting-stack (ai-stack)",
+    "content": "You are currently interacting with Brighton Kimani's flagship open-source project, kubernetes-llm-hosting-stack (https://github.com/Gachagokimani/kubernetes-llm-hosting-stack), deployed live in Kubernetes as ai-stack. It is engineered to serve quantized GGUF LLMs (Qwen2.5-0.5B-Instruct via llama.cpp on CPU) under 4 GB RAM alongside hybrid RAG retrieval, SearXNG privacy-first meta-search, and polyglot microservices (.NET 8, Java, and Python FastAPI). Feel free to ask about how any layer of this live architecture works."
   },
   {
-    "topic": "Glimpse Travel & Tours",
-    "content": "At Glimpse Travel & Tours (Nov 2026 - Present), Brighton serves as a Part-Time Software Automation Engineer architecting multi-tenant workflows, custom vendor branding interfaces, and automated integration pipelines for a unified travel product catalogue."
+    "category": "projects",
+    "topic": "Other Open-Source Repositories: rhomes, Cybersmarter-business-system & firstlight-apartment",
+    "content": "Apart from this live Kubernetes AI stack you are currently engaging with, Brighton also maintains three public repositories under https://github.com/Gachagokimani: (1) rhomes — a TypeScript scalable rental listings platform automating property discovery and tenant-landlord workflows; (2) Cybersmarter-business-system — a TypeScript end-to-end business management system for operational scaling, inventory control, and workflow automation; and (3) firstlight-apartment — a JavaScript residential rental showcase and unit inquiry web application."
   },
   {
-    "topic": "Safaricom PLC",
-    "content": "At Safaricom PLC (Oct 2025 - Oct 2026), Brighton worked as an AI & Automations Engineer building full-stack microservices automating ITSM, onboarding, and waste management with UiPath, n8n, Playwright, and PyTorch chat interfaces—reducing execution times from days to minutes—alongside OpenShift, AWS, Jenkins CI/CD, GitOps (FluxCD, GitLab), pipeline security hardening, and Technovation STEM mentorship."
+    "category": "architecture",
+    "topic": "Live Kubernetes Microservice Architecture (kubernetes-llm-hosting-stack)",
+    "content": "This live portfolio stack runs as decoupled microservices inside Kubernetes: a C++ llama.cpp inference server running Qwen2.5-0.5B-Instruct Q4_K_M on CPU, a SearXNG privacy-first meta-search service, a Python FastAPI RAG orchestrator and frontend, a .NET 8 Minimal API service for document ingestion and response formatting, a Java HTTP indexer for proposal synchronization, and an independent .NET 8 RBAC/SSO access-control microservice."
   },
   {
-    "topic": "Bill Motors",
-    "content": "At Bill Motors (Jan 2024 - Oct 2025), Brighton worked as an Automation Engineer building self-service cloud infrastructure with Terraform, automated self-healing incident remediation systems, CI/CD pipelines, and embedded DevSecOps security gates."
+    "category": "security",
+    "topic": "Access Control & Infrastructure Hardening Overview",
+    "content": "Brighton designed this stack with defense-in-depth principles: role-based access control via an independent .NET 8 OAuth SSO service that restricts administrative proposal management to authorized owners, centralized Kubernetes configuration management, and encrypted secret storage at rest."
   },
   {
-    "topic": "Digital Marketing & SEO",
-    "content": "Brighton led multi-platform AIOps social media and SEO content strategies at Howam Productions (Jun 2024 - Sep 2025) and Journey Palette (May 2024 - Aug 2025) across LinkedIn, Instagram, TikTok, Facebook, and Blogs."
+    "category": "experience",
+    "topic": "Glimpse Travel & Tours — Part-Time Software Automation Engineer (Nov 2026 – Present)",
+    "content": "At Glimpse Travel & Tours (Nov 2026 – Present), Brighton Kimani architects multi-tenant platform workflows bridging tourism service providers and travelers with custom vendor branding interfaces, and engineers automated integration pipelines for a unified product catalogue supporting dynamic search and provider matching."
   },
   {
-    "topic": "Kubernetes LLM Hosting Stack",
-    "content": "Brighton architected the open-source Kubernetes LLM Hosting Stack (github.com/Gachagokimani/kubernetes-llm-hosting-stack) running quantized GGUF inference via llama.cpp, SearXNG meta-search, and a FastAPI hybrid RAG portfolio concierge on resource-constrained nodes."
+    "category": "experience",
+    "topic": "Safaricom PLC — AI & Automations Engineer (Oct 2025 – Oct 2026)",
+    "content": "At Safaricom PLC (Oct 2025 – Oct 2026), Brighton built a full-stack microservice automating ITSM, employee onboarding, and waste management using UiPath, n8n, Playwright, and PyTorch chat interfaces—reducing execution times from days to minutes. He delivered resilient AIOps and AI-as-a-Service products across OpenShift, AWS, Jenkins CI/CD, and GitOps (FluxCD, GitLab), hardened delivery pipelines against security gaps, and mentored Technovation STEM teams."
+  },
+  {
+    "category": "experience",
+    "topic": "Bill Motors — Automation Engineer (Jan 2024 – Oct 2025)",
+    "content": "At Bill Motors (Jan 2024 – Oct 2025), Brighton engineered self-service cloud infrastructure with Terraform to eliminate manual deployments, built automated self-healing incident remediation systems, and embedded DevSecOps security gates across CI/CD pipelines."
+  },
+  {
+    "category": "education",
+    "topic": "BSc in Information Technology — Kirinyaga University & Professional Referees",
+    "content": "Brighton Kimani earned a BSc in Information Technology from Kirinyaga University (Sep 2021 – Oct 2025), focusing on algorithms, operating systems, concurrency, AI/ML models, and full-stack engineering, with a final thesis on a blockchain-powered mobile digitized insurance claims system. He is also pursuing the ISTQB Foundation certification. Professional referees include Gilbert Andanje (SRE, Safaricom PLC), Joyce Wachira (Director, Bill Motors), and Winrose Muthee (Founder, Journey Palette)."
+  },
+  {
+    "category": "certifications",
+    "topic": "Python Development (Skillsoft)",
+    "content": "Brighton Kimani earned a Skillsoft certification in Python Development: Defining, Configuring, & Invoking Functions (Dec 2025), demonstrating practical competency in writing, configuring, and invoking Python functions. Verified on LinkedIn: https://www.linkedin.com/in/brighton-kimani/details/certifications/"
+  },
+  {
+    "category": "certifications",
+    "topic": "AI Frameworks, Agentic AI & AI Developer Role (Skillsoft)",
+    "content": "Brighton completed Skillsoft's AI Framework Overview courses on Development Frameworks and the AI Developer Role (Dec 2025), plus Inside Agentic AI: Popular Frameworks, showing grounding in AI development frameworks and agentic AI tooling. Verified on LinkedIn: https://www.linkedin.com/in/brighton-kimani/details/certifications/"
+  },
+  {
+    "category": "certifications",
+    "topic": "AI Practitioner Practice (Skillsoft)",
+    "content": "Brighton holds The AI Practitioner: Role & Responsibilities and Optimizing AI Solutions credentials (Nov 2025), covering the AI practitioner's remit and the optimization of AI solutions, with associated exposure to Robotic Process Automation and DevOps. Verified on LinkedIn: https://www.linkedin.com/in/brighton-kimani/details/certifications/"
+  },
+  {
+    "category": "certifications",
+    "topic": "AWS DevOps Engineering Professional Level (Skillsoft)",
+    "content": "Brighton completed six AWS-aligned Skillsoft modules (Nov–Dec 2025) spanning CI/CD pipelines, Infrastructure as Code, automated testing, artifact management and security, deployment strategies, and Intermediate AWS DevOps & Application Deployment. Verified on LinkedIn: https://www.linkedin.com/in/brighton-kimani/details/certifications/"
+  },
+  {
+    "category": "certifications",
+    "topic": "Cloud Automation & Orchestration (CompTIA Cloud+ Skillsoft)",
+    "content": "Brighton earned the CompTIA Cloud+ module on Automation and Orchestration Troubleshooting (Dec 2025), reflecting skill in automating and diagnosing cloud workflows. Verified on LinkedIn: https://www.linkedin.com/in/brighton-kimani/details/certifications/"
+  },
+  {
+    "category": "certifications",
+    "topic": "Agile Delivery (Skillsoft)",
+    "content": "Brighton completed Agile Principles and Methodologies (Nov 2025), establishing a foundation in agile ways of working for software delivery. Verified on LinkedIn: https://www.linkedin.com/in/brighton-kimani/details/certifications/"
+  },
+  {
+    "category": "certifications",
+    "topic": "English Proficiency (EF SET C1 Advanced)",
+    "content": "Brighton holds an EF SET English Certificate with a score of 65/100 (C1 Advanced), issued May 2025, indicating advanced English communication ability. Verified on LinkedIn: https://www.linkedin.com/in/brighton-kimani/details/certifications/"
   }
 ]
