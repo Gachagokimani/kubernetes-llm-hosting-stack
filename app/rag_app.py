@@ -113,7 +113,7 @@ BROAD_INTENT_EXPANSIONS = {
 }
 
 
-def retrieve_local_context(query: str, top_k: int = 5):
+def retrieve_local_context(query: str, top_k: int = 7):
     entries = load_all_kb_entries()
     if not entries:
         return []
