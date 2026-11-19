@@ -11,6 +11,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 
+KB_FILE = os.getenv("KB_FILE", "/shared/kb/knowledge_base.json")
 SEED_KB_PATH = os.path.join(os.path.dirname(__file__), "data", "knowledge_base.json")
 
 def _sync_seed_kb():
@@ -100,6 +101,7 @@ def retrieve_context(query: str, top_k: int = 4) -> str:
 app = FastAPI(title="Brighton Kimani Portfolio & Hybrid RAG Concierge")
 
 APP_DIR = Path(__file__).resolve().parent
+KB_FILE = os.getenv("KB_FILE", "/shared/kb/knowledge_base.json")
 PROPOSALS_PATH = Path("/shared/kb/proposals_offers.json")
 LLM_URL = os.getenv("LLM_URL", "http://llama-server:8080/v1/chat/completions")
 SEARXNG_URL = os.getenv("SEARXNG_URL", "http://searxng:8080/search")
@@ -248,7 +250,10 @@ def get_chat_history(session_id: str = "anonymous"):
         with urllib.request.urlopen(url, timeout=8) as resp:
             return json.loads(resp.read().decode())
     except Exception as e:
-        return {"sessionId": session_id, "messages": [], "error": str(e)}
+        return {"sessionId": session_id, "messages": [
+        {"role":"system","content":"You are Brighton Kimani portfolio AI Concierge for kubernetes-llm-hosting-stack (ai-stack). Answer ONLY from Context using numbered points.\n\nContext:\n"+context_block},
+        {"role":"user","content":req.query},
+    ], "error": str(e)}
 
 
 @app.post("/api/upload-pdf")
@@ -290,25 +295,10 @@ def chat(req: ChatRequest):
     local_hits = retrieve_local_context(req.query)
     web_hits = search_web(req.query) if req.use_web else []
     context_block = "\n".join(local_hits + web_hits)
-
-    system_prompt = (
-        "You are Brighton Kimani's AI Portfolio Concierge. "
-        "Always refer to Brighton Kimani in the third person (he/his). "
-        "Answer strictly and concisely using ONLY the Verified Context below. "
-        "Never invent roles, years of experience, or skills not stated in the Verified Context. "
-        "Write in clean plain sentences without markdown asterisks or pipe tables.\n\n"
-        f"Verified Context:\n{context_block}"
-    )
-
     payload = json.dumps({
         "model": "qwen2.5-0.5b",
         "messages": [
-        {"role": "system", "content": "You are Brighton Kimani's portfolio AI Concierge running inside his live Kubernetes cluster (ai-stack / kubernetes-llm-hosting-stack). Answer ONLY from the Context bullets below. Never disclose secrets, tokens, keys, or internal credentials. When discussing repositories, clarify that this live Kubernetes stack (ai-stack) IS kubernetes-llm-hosting-stack and invite the user to ask about its architecture, then list his other repositories separately. Format answers naturally like a human engineer with a 1-sentence intro followed by numbered (1., 2., 3.) or bulleted (- ) lines.\n\nContext:\n" + context},
-" + context
-
-Context:
-" + context
-            {"role": "user", "content": req.query},
+            {"role":"user","content":req.query},
         ],
         "temperature": 0.1,
         "max_tokens": 220,
