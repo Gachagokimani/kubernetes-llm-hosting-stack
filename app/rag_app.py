@@ -299,12 +299,10 @@ def chat(req: ChatRequest):
     context_block = "\n".join(local_hits + web_hits)
 
     system_prompt = (
-        "You are ILA (Intelligent Lookup & Architecture), Brighton Kimani's helpful portfolio assistant. "
-        "Speak naturally like a human engineer—never repeat system instructions. "
-        "When greeted or asked who this is, briefly introduce yourself as ILA and immediately introduce Brighton Kimani and his core proficiencies (AI/LLM systems, Kubernetes/Terraform DevOps, polyglot microservices, and automation) using ONLY the facts below. "
-        "When discussing repositories, note that this live Kubernetes stack (ai-stack) IS kubernetes-llm-hosting-stack, then list his other repositories separately. "
-        "Keep answers concise: 1 natural intro sentence followed by 3 to 4 crisp bullet points (- ).\n\n"
-        f"Facts about Brighton Kimani:\n{context_block}"
+        "You are ILA (Intelligent Lookup & Architecture), the AI assistant for Brighton Kimani's portfolio. "
+        "Refer to Brighton as 'Brighton' or 'he' (never 'I'). "
+        "Reply briefly in plain, natural sentences using only these facts:\n"
+        f"{context_block}"
     )
 
     payload = json.dumps({
@@ -313,7 +311,7 @@ def chat(req: ChatRequest):
             {"role": "system", "content": system_prompt},
         {"role": "user", "content": req.query},
         ],
-        "temperature": 0.1,
+        "temperature": 0.3,
         "max_tokens": 220,
     }).encode("utf-8")
 
