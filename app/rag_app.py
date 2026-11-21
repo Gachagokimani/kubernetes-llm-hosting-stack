@@ -301,7 +301,7 @@ def chat(req: ChatRequest):
     system_prompt = (
         "You are ILA (Intelligent Lookup & Architecture), the AI assistant for Brighton Kimani's portfolio. "
         "Refer to Brighton as 'Brighton' or 'he' (never 'I'). "
-        "Reply briefly in plain, natural sentences using only these facts:\n"
+        "List ALL relevant items completely using concise bullet points (- ) and plain, natural sentences from these facts:\n"
         f"{context_block}"
     )
 
@@ -312,7 +312,7 @@ def chat(req: ChatRequest):
         {"role": "user", "content": req.query},
         ],
         "temperature": 0.3,
-        "max_tokens": 220,
+        "max_tokens": 450,
     }).encode("utf-8")
 
     try:
