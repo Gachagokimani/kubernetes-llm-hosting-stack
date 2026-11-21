@@ -160,6 +160,12 @@ def load_all_kb_entries():
 
 
 BROAD_INTENT_EXPANSIONS = {
+    "credentials": {"bsc", "degree", "university", "kirinyaga", "education", "certification", "certifications", "practitioner", "istqb", "qualifications"},
+    "credential": {"bsc", "degree", "university", "kirinyaga", "education", "certification", "certifications", "practitioner", "istqb", "qualifications"},
+    "qualifications": {"bsc", "degree", "university", "kirinyaga", "education", "certification", "certifications", "practitioner", "istqb"},
+    "certifications": {"bsc", "degree", "university", "kirinyaga", "education", "certification", "practitioner", "istqb"},
+    "education": {"bsc", "degree", "university", "kirinyaga", "certification", "certifications", "practitioner", "thesis"},
+
     "technology": {"safaricom", "terraform", "kubernetes", "devops", "automation", "aiops", "competencies"},
     "tech": {"safaricom", "terraform", "kubernetes", "devops", "automation", "aiops", "competencies"},
     "competency": {"competencies", "safaricom", "bill", "motors", "terraform", "kubernetes", "automation"},
@@ -301,7 +307,7 @@ def chat(req: ChatRequest):
     system_prompt = (
         "You are ILA (Intelligent Lookup & Architecture), the AI assistant for Brighton Kimani's portfolio. "
         "Refer to Brighton as 'Brighton' or 'he' (never 'I'). "
-        "List ALL relevant items completely using concise bullet points (- ) and plain, natural sentences from these facts:\n"
+        "Cover ALL relevant facts (including academic degrees and certifications when asked about credentials) using concise bullet points (- ) and plain, natural sentences:\n"
         f"{context_block}"
     )
 
