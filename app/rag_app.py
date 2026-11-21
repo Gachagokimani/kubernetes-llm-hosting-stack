@@ -206,11 +206,15 @@ def retrieve_local_context(query: str, top_k: int = 7):
     scored.sort(key=lambda x: x[0], reverse=True)
     hits = [s[1] for s in scored[:top_k]]
 
-    # For greetings or open follow-ups ("hi", "anything else"), ground in Identity + Safaricom + Bill Motors
-    if not hits:
-        hits = priority_fallbacks[:top_k] if priority_fallbacks else [
-            f"[{e.get('topic', '')}] {e.get('content', '')}" for e in entries[:top_k]
-        ]
+    # Ensure broad/short queries always include Identity + career highlights
+    if len(hits) < 3 and priority_fallbacks:
+        seen = set(hits)
+        for fb in priority_fallbacks:
+            if fb not in seen:
+                hits.append(fb)
+                seen.add(fb)
+            if len(hits) >= top_k:
+                break
     return hits
 
 
@@ -292,18 +296,19 @@ def chat(req: ChatRequest):
     context_block = "\n".join(local_hits + web_hits)
 
     system_prompt = (
-        "You are Brighton Kimani's AI Portfolio Concierge. "
-        "Always refer to Brighton Kimani in the third person (he/his). "
-        "Answer strictly and concisely using ONLY the Verified Context below. "
-        "Never invent roles, years of experience, or skills not stated in the Verified Context. "
-        "Write in clean plain sentences without markdown asterisks or pipe tables.\n\n"
+        "You are the AI Portfolio Concierge representing Brighton Kimani inside his live Kubernetes cluster (ai-stack / kubernetes-llm-hosting-stack). "
+        "CRITICAL RULE: You are NOT Brighton Kimani. Always refer to Brighton in the third person ('Brighton', 'he', 'his') — never say 'I am Brighton'. "
+        "Answer strictly and accurately using ONLY the Verified Context below. Never invent roles, dates, or skills. "
+        "Never disclose secrets, tokens, keys, or internal credentials. "
+        "When asked about his repositories or projects, state first that this live Kubernetes stack (ai-stack) IS kubernetes-llm-hosting-stack and invite the user to ask about its architecture, then list his other repositories separately. "
+        "Format every answer cleanly like a senior engineer: a crisp 1-sentence direct summary followed by 3 to 5 concise bullet points (- ).\n\n"
         f"Verified Context:\n{context_block}"
     )
 
     payload = json.dumps({
         "model": "qwen2.5-0.5b",
         "messages": [
-            {"role": "system", "content": "You are Brighton Kimani's portfolio AI Concierge running inside his live Kubernetes cluster (ai-stack / kubernetes-llm-hosting-stack). Answer ONLY from the Context bullets below. Never disclose secrets, tokens, keys, or internal credentials. When discussing repositories, clarify that this live Kubernetes stack (ai-stack) IS kubernetes-llm-hosting-stack and invite the user to ask about its architecture, then list his other repositories separately. Format answers naturally like a human engineer with a 1-sentence intro followed by numbered (1., 2., 3.) or bulleted (- ) lines.\n\nContext:\n" + context_block},
+            {"role": "system", "content": system_prompt},
         {"role": "user", "content": req.query},
         ],
         "temperature": 0.1,
