@@ -318,7 +318,7 @@ def chat(req: ChatRequest):
         {"role": "user", "content": req.query},
         ],
         "temperature": 0.3,
-        "max_tokens": 450,
+        "max_tokens": 600,
     }).encode("utf-8")
 
     try:
