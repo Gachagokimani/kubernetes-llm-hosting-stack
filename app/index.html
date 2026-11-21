@@ -87,7 +87,7 @@
       <div id="aiBackdrop" class="ai-backdrop" onclick="closeBlowout()"></div>
       <div id="aiPanel" class="ai-panel">
         <div class="ai-header">
-          <span class="ai-header-title"><span class="material-symbols-outlined">smart_toy</span> Ask Brighton's Live AI Concierge</span>
+          <span class="ai-header-title"><span class="material-symbols-outlined">smart_toy</span> ILA — Intelligent Lookup &amp; Architecture</span>
           <div style="display:flex;align-items:center;gap:0.45rem;">
             <span class="ai-badge">llama.cpp + RAG</span>
             <button type="button" id="expandBtn" class="expand-btn" onclick="toggleBlowout()" title="Expand chat (Esc to close)">
@@ -373,7 +373,7 @@
               chat.innerHTML += `<div class="msg"><span class="user-msg">You:</span> ${m.text}</div>`;
             } else {
               const srcHtml = m.sourcesCount ? `<div class="src-box">Grounded in ${m.sourcesCount} retrieved source(s)</div>` : '';
-              chat.innerHTML += `<div class="msg"><span class="bot-msg"><b>AI Concierge:</b> ${m.text}</span>${srcHtml}</div>`;
+              chat.innerHTML += `<div class="msg"><span class="bot-msg"><b>ILA:</b> ${m.text}</span>${srcHtml}</div>`;
             }
           }
           chat.scrollTop = chat.scrollHeight;
@@ -492,7 +492,7 @@
         if (thinkingEl) thinkingEl.remove();
         const srcs = [...(data.local_sources || []), ...(data.web_sources || [])];
         const srcHtml = srcs.length ? `<div class="src-box">Grounded in ${srcs.length} retrieved source(s)</div>` : '';
-        chat.innerHTML += `<div class="msg"><span class="bot-msg"><b>AI Concierge:</b> ${data.answer}</span>${srcHtml}</div>`;
+        chat.innerHTML += `<div class="msg"><span class="bot-msg"><b>ILA:</b> ${data.answer}</span>${srcHtml}</div>`;
       } catch (e) {
         const thinkingEl = document.getElementById(thinkingId);
         if (thinkingEl) thinkingEl.remove();

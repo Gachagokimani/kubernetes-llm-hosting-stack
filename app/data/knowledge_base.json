@@ -1,5 +1,10 @@
 [
   {
+    "category": "architecture",
+    "topic": "ILA \u2014 Intelligent Lookup & Architecture (Portfolio Concierge)",
+    "content": "ILA (Intelligent Lookup & Architecture) is Brighton Kimani's live portfolio AI Concierge running inside his Kubernetes cluster (ai-stack / kubernetes-llm-hosting-stack). ILA combines local hybrid keyword-and-intent retrieval over Brighton's verified engineering knowledge base, optional SearXNG live web search, and quantized Qwen2.5-0.5B-Instruct inference via llama.cpp under 4 GB RAM."
+  },
+  {
     "category": "projects",
     "topic": "Flagship Live Stack: kubernetes-llm-hosting-stack (ai-stack)",
     "content": "You are currently interacting with Brighton Kimani's flagship open-source project, kubernetes-llm-hosting-stack (https://github.com/Gachagokimani/kubernetes-llm-hosting-stack), deployed live in Kubernetes as ai-stack. It is engineered to serve quantized GGUF LLMs (Qwen2.5-0.5B-Instruct via llama.cpp on CPU) under 4 GB RAM alongside hybrid RAG retrieval, SearXNG privacy-first meta-search, and polyglot microservices (.NET 8, Java, and Python FastAPI). Feel free to ask about how any layer of this live architecture works."
@@ -7,7 +12,7 @@
   {
     "category": "projects",
     "topic": "Other Open-Source Repositories: rhomes, Cybersmarter-business-system & firstlight-apartment",
-    "content": "Apart from this live Kubernetes AI stack you are currently engaging with, Brighton also maintains three public repositories under https://github.com/Gachagokimani: (1) rhomes — a TypeScript scalable rental listings platform automating property discovery and tenant-landlord workflows; (2) Cybersmarter-business-system — a TypeScript end-to-end business management system for operational scaling, inventory control, and workflow automation; and (3) firstlight-apartment — a JavaScript residential rental showcase and unit inquiry web application."
+    "content": "Apart from this live Kubernetes AI stack you are currently engaging with, Brighton also maintains three public repositories under https://github.com/Gachagokimani: (1) rhomes \u2014 a TypeScript scalable rental listings platform automating property discovery and tenant-landlord workflows; (2) Cybersmarter-business-system \u2014 a TypeScript end-to-end business management system for operational scaling, inventory control, and workflow automation; and (3) firstlight-apartment \u2014 a JavaScript residential rental showcase and unit inquiry web application."
   },
   {
     "category": "architecture",
@@ -21,23 +26,23 @@
   },
   {
     "category": "experience",
-    "topic": "Glimpse Travel & Tours — Part-Time Software Automation Engineer (Nov 2026 – Present)",
-    "content": "At Glimpse Travel & Tours (Nov 2026 – Present), Brighton Kimani architects multi-tenant platform workflows bridging tourism service providers and travelers with custom vendor branding interfaces, and engineers automated integration pipelines for a unified product catalogue supporting dynamic search and provider matching."
+    "topic": "Glimpse Travel & Tours \u2014 Part-Time Software Automation Engineer (Nov 2026 \u2013 Present)",
+    "content": "At Glimpse Travel & Tours (Nov 2026 \u2013 Present), Brighton Kimani architects multi-tenant platform workflows bridging tourism service providers and travelers with custom vendor branding interfaces, and engineers automated integration pipelines for a unified product catalogue supporting dynamic search and provider matching."
   },
   {
     "category": "experience",
-    "topic": "Safaricom PLC — AI & Automations Engineer (Oct 2025 – Oct 2026)",
-    "content": "At Safaricom PLC (Oct 2025 – Oct 2026), Brighton built a full-stack microservice automating ITSM, employee onboarding, and waste management using UiPath, n8n, Playwright, and PyTorch chat interfaces—reducing execution times from days to minutes. He delivered resilient AIOps and AI-as-a-Service products across OpenShift, AWS, Jenkins CI/CD, and GitOps (FluxCD, GitLab), hardened delivery pipelines against security gaps, and mentored Technovation STEM teams."
+    "topic": "Safaricom PLC \u2014 AI & Automations Engineer (Oct 2025 \u2013 Oct 2026)",
+    "content": "At Safaricom PLC (Oct 2025 \u2013 Oct 2026), Brighton built a full-stack microservice automating ITSM, employee onboarding, and waste management using UiPath, n8n, Playwright, and PyTorch chat interfaces\u2014reducing execution times from days to minutes. He delivered resilient AIOps and AI-as-a-Service products across OpenShift, AWS, Jenkins CI/CD, and GitOps (FluxCD, GitLab), hardened delivery pipelines against security gaps, and mentored Technovation STEM teams."
   },
   {
     "category": "experience",
-    "topic": "Bill Motors — Automation Engineer (Jan 2024 – Oct 2025)",
-    "content": "At Bill Motors (Jan 2024 – Oct 2025), Brighton engineered self-service cloud infrastructure with Terraform to eliminate manual deployments, built automated self-healing incident remediation systems, and embedded DevSecOps security gates across CI/CD pipelines."
+    "topic": "Bill Motors \u2014 Automation Engineer (Jan 2024 \u2013 Oct 2025)",
+    "content": "At Bill Motors (Jan 2024 \u2013 Oct 2025), Brighton engineered self-service cloud infrastructure with Terraform to eliminate manual deployments, built automated self-healing incident remediation systems, and embedded DevSecOps security gates across CI/CD pipelines."
   },
   {
     "category": "education",
-    "topic": "BSc in Information Technology — Kirinyaga University & Professional Referees",
-    "content": "Brighton Kimani earned a BSc in Information Technology from Kirinyaga University (Sep 2021 – Oct 2025), focusing on algorithms, operating systems, concurrency, AI/ML models, and full-stack engineering, with a final thesis on a blockchain-powered mobile digitized insurance claims system. He is also pursuing the ISTQB Foundation certification. Professional referees include Gilbert Andanje (SRE, Safaricom PLC), Joyce Wachira (Director, Bill Motors), and Winrose Muthee (Founder, Journey Palette)."
+    "topic": "BSc in Information Technology \u2014 Kirinyaga University & Professional Referees",
+    "content": "Brighton Kimani earned a BSc in Information Technology from Kirinyaga University (Sep 2021 \u2013 Oct 2025), focusing on algorithms, operating systems, concurrency, AI/ML models, and full-stack engineering, with a final thesis on a blockchain-powered mobile digitized insurance claims system. He is also pursuing the ISTQB Foundation certification. Professional referees include Gilbert Andanje (SRE, Safaricom PLC), Joyce Wachira (Director, Bill Motors), and Winrose Muthee (Founder, Journey Palette)."
   },
   {
     "category": "certifications",
@@ -57,7 +62,7 @@
   {
     "category": "certifications",
     "topic": "AWS DevOps Engineering Professional Level (Skillsoft)",
-    "content": "Brighton completed six AWS-aligned Skillsoft modules (Nov–Dec 2025) spanning CI/CD pipelines, Infrastructure as Code, automated testing, artifact management and security, deployment strategies, and Intermediate AWS DevOps & Application Deployment. Verified on LinkedIn: https://www.linkedin.com/in/brighton-kimani/details/certifications/"
+    "content": "Brighton completed six AWS-aligned Skillsoft modules (Nov\u2013Dec 2025) spanning CI/CD pipelines, Infrastructure as Code, automated testing, artifact management and security, deployment strategies, and Intermediate AWS DevOps & Application Deployment. Verified on LinkedIn: https://www.linkedin.com/in/brighton-kimani/details/certifications/"
   },
   {
     "category": "certifications",
