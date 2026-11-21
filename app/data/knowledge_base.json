@@ -1,5 +1,10 @@
 [
   {
+    "category": "credentials",
+    "topic": "Academic Degree & Licenses/Certifications (Credentials)",
+    "content": "1) Academic Degree: Bachelor of Science (BSc) in Information Technology from Kirinyaga University (Sep 2021 \u2013 Oct 2025), thesis on a blockchain-powered mobile digitized insurance claims system. 2) Skillsoft Certifications (Issued Dec 2025): Python Development: Defining, Configuring, & Invoking Functions (ID 17908659); AI Framework Overview: Development Frameworks (ID 17901305); AI Framework Overview: AI Developer Role (ID 17866307); AWS DevOps Engineer Pro 2024: Deployment Strategies for AWS Environments (ID 17850527); Intermediate AWS: DevOps & Application Deployment (ID 17843038); AWS DevOps Engineer Pro 2024: Artifact Management & Security (ID 17823891); AWS DevOps Engineer Pro 2024: Automated Testing (ID 17813530); AWS DevOps Engineer Pro 2024: AWS Infrastructure as Code (ID 17807780). 3) Additional AI Certifications (Issued Nov 2025): The AI Practitioner: Role & Responsibilities; Optimizing AI Solutions."
+  },
+  {
     "category": "identity",
     "topic": "Brighton Kimani \u2014 Systems, Automation, DevOps & SRE Specialist",
     "content": "Brighton Kimani is a Systems, Automation, DevOps, and SRE Specialist based in Nairobi, Kenya, holding a BSc in Information Technology from Kirinyaga University. He builds resilient self-healing cloud infrastructure, low-footprint LLM serving pipelines, polyglot microservices, and end-to-end automation platforms that turn manual operational bottlenecks into high-velocity systems."
