@@ -1,52 +1,32 @@
 [
   {
-    "category": "ila_architecture",
-    "topic": "ILA Role & Boundary: Intelligent Lookup & Architecture",
-    "content": "ILA (Intelligent Lookup & Architecture) is the dedicated AI Portfolio Concierge representing Brighton Kimani inside his live Kubernetes cluster (namespace ai-stack, repository kubernetes-llm-hosting-stack). ILA is an assistant representing Brighton\u2014never Brighton himself. When asked who ILA is or how she works, ILA explains her own architecture clearly and introduces Brighton Kimani in the third person (Brighton, he, his)."
-  },
-  {
-    "category": "ila_architecture",
-    "topic": "ILA Live Stack Architecture: FastAPI, llama.cpp, RAG & SearXNG",
-    "content": "ILA runs as part of Brighton's kubernetes-llm-hosting-stack on Kubernetes under a tight memory budget (under 4 GB RAM on a single 4 GB node). Her pipeline combines: (1) Python FastAPI (rag-frontend) serving the web UI and /api/chat endpoint, (2) local retrieval over structured JSON knowledge_base.json entries in /shared/kb plus document ingestion via a .NET 8 service and Java Spring Boot indexer, (3) optional live web search via SearXNG when Web mode is enabled, and (4) quantized GGUF inference (Qwen2.5-0.5B-Instruct via llama.cpp on CPU)."
-  },
-  {
     "category": "identity",
-    "topic": "Who is Brighton Kimani: Systems, Automation & AI Infrastructure Engineer",
-    "content": "Brighton Kimani is a Systems, Automation, DevOps & SRE Engineer based in Nairobi, Kenya (7th Avenue, Nairobi). He holds a BSc in Information Technology from Kirinyaga University (Sep 2021 \u2013 Oct 2025), with a thesis on a blockchain-powered mobile digitized insurance claims system. He specializes in turning manual operational bottlenecks into resilient, automated cloud infrastructure, low-footprint LLM serving pipelines, polyglot microservices, and end-to-end test/workflow automation."
-  },
-  {
-    "category": "experience",
-    "topic": "Glimpse Travel & Tours: Part-Time Software Automation Engineer (Nov 2026 \u2013 Present)",
-    "content": "Since November 2026, Brighton has worked as a Part-Time Software Automation Engineer at Glimpse Travel & Tours. He architected and automated workflows for a multi-tenant platform connecting tourism service providers and travelers with custom vendor branding interfaces, and built automated pipeline services and integration pathways for a unified product catalogue supporting dynamic search and provider matching."
-  },
-  {
-    "category": "experience",
-    "topic": "Safaricom PLC: AI & Automations Engineer (Oct 2025 \u2013 Oct 2026)",
-    "content": "From October 2025 to October 2026, Brighton served as an AI & Automations Engineer at Safaricom PLC. He built a full-stack microservice automating ITSM, onboarding, and waste management using UiPath, n8n, Playwright, and PyTorch chat interfaces\u2014cutting execution time from days to minutes. He also delivered resilient digital products using AIOps and AI-as-a-Service across OpenShift, AWS, Jenkins CI/CD, and GitOps (FluxCD, GitLab) while hardening pipelines against security gaps."
-  },
-  {
-    "category": "experience",
-    "topic": "Bill Motors: Automation Engineer (Jan 2024 \u2013 Oct 2025)",
-    "content": "From January 2024 to October 2025, Brighton worked as an Automation Engineer at Bill Motors. He engineered self-service cloud infrastructure using Terraform to eliminate manual deployments, alongside automated self-healing systems and embedded DevSecOps security gates."
+    "topic": "Brighton Kimani \u2014 Systems, Automation, DevOps & SRE Specialist",
+    "content": "Brighton Kimani is a Systems, Automation, DevOps, and SRE Specialist based in Nairobi, Kenya, holding a BSc in Information Technology from Kirinyaga University. He builds resilient self-healing cloud infrastructure, low-footprint LLM serving pipelines, polyglot microservices, and end-to-end automation platforms that turn manual operational bottlenecks into high-velocity systems."
   },
   {
     "category": "proficiencies",
-    "topic": "Proficiencies: AI, LLMs, RAG Systems & Automation",
-    "content": "Brighton's AI and automation proficiencies include running quantized GGUF models with llama.cpp and Ollama Modelfiles, building hybrid RAG pipelines with local knowledge bases and SearXNG search, developing PyTorch chat interfaces and AIOps/AIaaS workflows, and automating end-to-end processes and UI/API testing with UiPath, n8n, and Playwright."
+    "topic": "Core Competencies: AI, LLMs, RAG Systems & Automation",
+    "content": "Brighton's core AI and automation proficiencies include serving quantized GGUF LLMs with llama.cpp and Ollama Modelfiles, architecting hybrid RAG systems with SearXNG meta-search, building PyTorch chat interfaces and AIOps/AI-as-a-Service pipelines, and automating enterprise workflows and QA with UiPath, n8n, and Playwright."
   },
   {
     "category": "proficiencies",
-    "topic": "Proficiencies: DevOps, Cloud, SRE & Polyglot Microservices",
-    "content": "Brighton's infrastructure and backend proficiencies span Kubernetes, Helm charts, OpenShift, AWS, Terraform infrastructure-as-code, GitOps (FluxCD, GitLab), Jenkins CI/CD, NetworkPolicy, RBAC, and DevSecOps gates. On the application layer, he builds microservices and web platforms using Python (FastAPI), .NET 8 Minimal APIs, Java (Spring Boot), and TypeScript/JavaScript."
+    "topic": "Core Competencies: DevOps, Cloud, SRE & Polyglot Microservices",
+    "content": "Brighton's cloud and backend proficiencies include Kubernetes, Helm charts, OpenShift, AWS, Terraform infrastructure-as-code, GitOps (FluxCD and GitLab), Jenkins CI/CD, NetworkPolicy, RBAC, and DevSecOps security gates. He develops polyglot microservices and web applications in Python (FastAPI), .NET 8 Minimal APIs, Java (Spring Boot), and TypeScript/JavaScript."
+  },
+  {
+    "category": "experience",
+    "topic": "Experience: Glimpse Travel & Tours, Safaricom PLC & Bill Motors",
+    "content": "Brighton works as a Part-Time Software Automation Engineer at Glimpse Travel & Tours (Nov 2026\u2013Present), automating multi-tenant tourism vendor platforms and unified product catalogues. Previously, as an AI & Automations Engineer at Safaricom PLC (Oct 2025\u2013Oct 2026), he built full-stack ITSM and onboarding automation microservices with UiPath, n8n, Playwright, and PyTorch (cutting execution from days to minutes) and delivered AIOps across OpenShift, AWS, and FluxCD. At Bill Motors (Jan 2024\u2013Oct 2025), he engineered self-service Terraform cloud infrastructure, self-healing systems, and DevSecOps gates."
   },
   {
     "category": "projects",
     "topic": "Repositories: kubernetes-llm-hosting-stack, rhomes, Cybersmarter-business-system & firstlight-apartment",
-    "content": "Brighton's flagship live stack is kubernetes-llm-hosting-stack (https://github.com/Gachagokimani/kubernetes-llm-hosting-stack), deployed in Kubernetes as ai-stack. His other public repositories include rhomes (TypeScript rental listings and tenant-landlord workflow platform), Cybersmarter-business-system (TypeScript business management and inventory/workflow system), and firstlight-apartment (JavaScript residential rental showcase and inquiry app)."
+    "content": "Brighton's flagship repository is kubernetes-llm-hosting-stack (deployed live in Kubernetes as ai-stack), which hosts quantized GGUF models under 4 GB RAM with hybrid RAG and SearXNG. His other public repositories are rhomes (TypeScript rental listings platform), Cybersmarter-business-system (TypeScript end-to-end business and inventory management system), and firstlight-apartment (JavaScript residential rental showcase)."
   },
   {
-    "category": "references",
-    "topic": "Education & Professional Referees",
-    "content": "Brighton earned a BSc in Information Technology from Kirinyaga University (Sep 2021 \u2013 Oct 2025). His listed referees are Gilbert Andanje (Site Reliability Engineer, Safaricom PLC), Joyce Wachira (Director, Bill Motors), and Winrose Muthee (Founder, Journey Palette). Contact: gachagokimani@gmail.com | +254 115 482 990."
+    "category": "ila_architecture",
+    "topic": "ILA Architecture (Intelligent Lookup & Architecture)",
+    "content": "ILA stands for Intelligent Lookup & Architecture, Brighton Kimani's live portfolio concierge running on Kubernetes (ai-stack). ILA combines a Python FastAPI gateway, local JSON knowledge retrieval plus .NET 8 and Spring Boot document indexing, optional SearXNG web search, and quantized Qwen2.5-0.5B-Instruct inference via llama.cpp."
   }
 ]

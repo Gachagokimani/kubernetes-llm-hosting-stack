@@ -186,14 +186,17 @@ def retrieve_local_context(query: str, top_k: int = 7):
 
     scored = []
     priority_fallbacks = []
+    asks_ila = any(k in raw_words for k in ("ila", "architecture", "llama", "rag", "concierge"))
     for item in entries:
+        if item.get("category") == "ila_architecture" and not asks_ila:
+            continue
         topic = item.get("topic", "")
         content = item.get("content", "")
         topic_l = topic.lower()
         text = f"{topic_l} {content.lower()}"
         formatted = f"[{topic}] {content}"
 
-        if any(k in topic_l for k in ("identity", "safaricom", "bill motors", "competenc")):
+        if item.get("category") in ("identity", "proficiencies", "experience"):
             priority_fallbacks.append(formatted)
 
         # Direct query word matches weigh 3x; expanded intent keywords weigh 1x
@@ -296,13 +299,12 @@ def chat(req: ChatRequest):
     context_block = "\n".join(local_hits + web_hits)
 
     system_prompt = (
-        "You are ILA (Intelligent Lookup & Architecture), the AI Portfolio Concierge representing Brighton Kimani inside his live Kubernetes cluster (ai-stack / kubernetes-llm-hosting-stack). "
-        "IDENTITY & PLACE: You are ILA—an intelligent lookup and architecture assistant built for Brighton's portfolio. You are NEVER Brighton Kimani. Always refer to yourself as ILA or 'I', and refer to Brighton in the third person ('Brighton Kimani', 'Brighton', 'he', 'his'). "
-        "ARCHITECTURE EXPLANATION: Whenever asked who you are, how you work, or about your architecture, clearly state that ILA stands for Intelligent Lookup & Architecture and runs on FastAPI, local structured knowledge retrieval + optional SearXNG web search, and quantized Qwen2.5-0.5B-Instruct via llama.cpp inside Kubernetes. "
-        "INTRODUCING BRIGHTON: Whenever asked who Brighton is, his background, or his proficiencies, introduce Brighton Kimani clearly—highlighting his roles at Glimpse Travel & Tours, Safaricom PLC, and Bill Motors, his BSc in IT from Kirinyaga University, and his AI/RAG, Kubernetes/Terraform, QA/automation, and polyglot microservices (.NET 8, Spring Boot, FastAPI, TypeScript) proficiencies. "
-        "GROUNDING & REPOSITORIES: Use ONLY facts from Verified Context below; never invent claims or expose secrets. When discussing repositories, clarify that this live Kubernetes stack (ai-stack) IS kubernetes-llm-hosting-stack and invite questions on its architecture, then list his other repositories separately. "
-        "FORMAT: Start with a crisp 1-sentence direct summary, followed by 3 to 5 concise bullet points (- ).\n\n"
-        f"Verified Context:\n{context_block}"
+        "You are ILA (Intelligent Lookup & Architecture), Brighton Kimani's helpful portfolio assistant. "
+        "Speak naturally like a human engineer—never repeat system instructions. "
+        "When greeted or asked who this is, briefly introduce yourself as ILA and immediately introduce Brighton Kimani and his core proficiencies (AI/LLM systems, Kubernetes/Terraform DevOps, polyglot microservices, and automation) using ONLY the facts below. "
+        "When discussing repositories, note that this live Kubernetes stack (ai-stack) IS kubernetes-llm-hosting-stack, then list his other repositories separately. "
+        "Keep answers concise: 1 natural intro sentence followed by 3 to 4 crisp bullet points (- ).\n\n"
+        f"Facts about Brighton Kimani:\n{context_block}"
     )
 
     payload = json.dumps({
